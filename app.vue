@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-// const a = "new object";
+const a = "new object";
 // console.log({ a });
 
 // const getUsers = () => {
@@ -13,6 +13,7 @@
 <template>
   <div>
     <NuxtRouteAnnouncer />
+    <Button variant="destructive"> Destructive </Button>
 
     <NuxtWelcome />
   </div>
