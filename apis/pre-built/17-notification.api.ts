@@ -14,11 +14,18 @@ export const notificationApi = {
     return authFetch.get(`${NOTIFICATION_URL}/paginate`, query, options);
   },
 
-  count: (query?: PaginationParams, options?: FetchOptions): Promise<PaginateResponse<Setting>> => {
+  count: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<PaginateResponse<Setting>> => {
     return authFetch.get(`${NOTIFICATION_URL}/count`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<Setting> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Setting> => {
     return authFetch.get(`${NOTIFICATION_URL}/${id}`, query, options);
   },
 
@@ -28,7 +35,11 @@ export const notificationApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: Setting, options?: FetchOptions): Promise<Setting> => {
+  updateById: (
+    id: string,
+    body: Setting,
+    options?: FetchOptions,
+  ): Promise<Setting> => {
     return authFetch.patch(`${NOTIFICATION_URL}/${id}`, body, options);
   },
 

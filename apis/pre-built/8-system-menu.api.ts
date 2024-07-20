@@ -6,11 +6,18 @@ import type { FetchOptions, PaginationParams } from "~/utils/types";
 const SYSTEM_MENU_URL = "/system_menus";
 export const systemMenuApi = {
   //  ----- Method: GET -----
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<SystemMenu> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<SystemMenu> => {
     return authFetch.get(`${SYSTEM_MENU_URL}/${id}`, query, options);
   },
 
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<SystemMenu[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<SystemMenu[]> => {
     return guestFetch.get(SYSTEM_MENU_URL, query, options);
   },
 
@@ -20,7 +27,11 @@ export const systemMenuApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: SystemMenu, options?: FetchOptions): Promise<SystemMenu> => {
+  updateById: (
+    id: string,
+    body: SystemMenu,
+    options?: FetchOptions,
+  ): Promise<SystemMenu> => {
     return authFetch.patch(`${SYSTEM_MENU_URL}/${id}`, body, options);
   },
 

@@ -6,15 +6,25 @@ import type { FetchOptions, PaginationParams } from "~/utils/types";
 const REVIEW_URL = "/gifts";
 export const giftApi = {
   //  ----- Method: GET -----
-  paginate: (query?: PaginationParams, options?: FetchOptions): Promise<Gift[]> => {
+  paginate: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Gift[]> => {
     return guestFetch.get(`${REVIEW_URL}/paginate`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<Gift> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Gift> => {
     return authFetch.get(`${REVIEW_URL}/${id}`, query, options);
   },
 
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<Gift[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Gift[]> => {
     return guestFetch.get(REVIEW_URL, query, options);
   },
 
@@ -24,7 +34,11 @@ export const giftApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: Gift, options?: FetchOptions): Promise<Gift> => {
+  updateById: (
+    id: string,
+    body: Gift,
+    options?: FetchOptions,
+  ): Promise<Gift> => {
     return authFetch.patch(`${REVIEW_URL}/${id}`, body, options);
   },
 

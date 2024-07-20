@@ -13,7 +13,8 @@ export const useListingStore = defineStore("listings", () => {
   const { filter } = useListingQuery();
 
   const filterWatch = computed(() => {
-    if (authUser.value?.user._id) Object.assign(filter.value, { userId: authUser.value.user._id });
+    if (authUser.value?.user._id)
+      Object.assign(filter.value, { userId: authUser.value.user._id });
 
     return new URLSearchParams(filter.value).toString();
   });

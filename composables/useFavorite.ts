@@ -13,7 +13,10 @@ export const useFavorite = ({ listingId }: FavoriteProps) => {
   const toggleFavorite = async (isWishlist: boolean) => {
     if (!authUser.value?.user._id) return useLogin().onOpen("login");
 
-    await listingApi.updateWishlist(listingId, isWishlist ? ActionEnum.Add : ActionEnum.Remove);
+    await listingApi.updateWishlist(
+      listingId,
+      isWishlist ? ActionEnum.Add : ActionEnum.Remove,
+    );
 
     return isWishlist;
   };

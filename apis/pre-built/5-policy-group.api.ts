@@ -14,11 +14,18 @@ export const policyGroupApi = {
     return authFetch.get(`${POLICY_GROUP_URL}/paginate`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<PolicyGroup> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<PolicyGroup> => {
     return authFetch.get(`${POLICY_GROUP_URL}/${id}`, query, options);
   },
 
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<PolicyGroup[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<PolicyGroup[]> => {
     return guestFetch.get(POLICY_GROUP_URL, query, options);
   },
 
@@ -28,7 +35,11 @@ export const policyGroupApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: PolicyGroup, options?: FetchOptions): Promise<PolicyGroup> => {
+  updateById: (
+    id: string,
+    body: PolicyGroup,
+    options?: FetchOptions,
+  ): Promise<PolicyGroup> => {
     return authFetch.patch(`${POLICY_GROUP_URL}/${id}`, body, options);
   },
 

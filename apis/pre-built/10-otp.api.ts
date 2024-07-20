@@ -5,7 +5,10 @@ import type { FetchOptions, PaginationParams } from "~/utils/types";
 const OTP_URL = "/otp";
 export const otpApi = {
   //  ----- Method: GET -----
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<Otp[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Otp[]> => {
     return guestFetch.get(OTP_URL, query, options);
   },
 

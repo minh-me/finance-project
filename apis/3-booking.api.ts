@@ -6,11 +6,18 @@ import type { FetchOptions, PaginationParams } from "~/utils/types";
 const BOOKING_URL = "/bookings";
 export const bookingApi = {
   //  ----- Method: GET -----
-  paginate: (query?: PaginationParams, options?: FetchOptions): Promise<Booking[]> => {
+  paginate: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Booking[]> => {
     return guestFetch.get(`${BOOKING_URL}/paginate`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<Booking> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Booking> => {
     return authFetch.get(`${BOOKING_URL}/${id}`, query, options);
   },
 
@@ -20,7 +27,11 @@ export const bookingApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: Booking, options?: FetchOptions): Promise<Booking> => {
+  updateById: (
+    id: string,
+    body: Booking,
+    options?: FetchOptions,
+  ): Promise<Booking> => {
     return authFetch.patch(`${BOOKING_URL}/${id}`, body, options);
   },
 

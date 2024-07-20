@@ -7,7 +7,12 @@ export class HttpClient {
     this.isAuth = isAuth;
   }
 
-  request<ResT>(method: MethodType, endpoint: string, requestData?: any, opts?: FetchOptions) {
+  request<ResT>(
+    method: MethodType,
+    endpoint: string,
+    requestData?: any,
+    opts?: FetchOptions,
+  ) {
     const options = {
       ...opts,
       method,

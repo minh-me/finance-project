@@ -1,0 +1,249 @@
+<script setup lang="ts">
+import { useForm } from "vee-validate";
+import { toast } from "~/components/ui/toast";
+import {
+  calculatePasswordStrength,
+  RegisterSchema,
+} from "~/validations/auth.validation";
+
+definePageMeta({ layout: "auth" });
+
+const loading = ref(false);
+
+const { handleSubmit, values, errors } = useForm({
+  validationSchema: RegisterSchema,
+});
+
+const onSubmit = handleSubmit(values => {
+  toast({
+    title: "You submitted the following values:",
+    description: h(
+      "pre",
+      { class: "mt-2 w-[340px] rounded-md bg-slate-950 p-4" },
+      h("code", { class: "text-white" }, JSON.stringify(values, null, 2)),
+    ),
+  });
+});
+
+const progress = ref(0);
+watch(
+  () => values.password,
+  passwordInput => {
+    if (passwordInput)
+      progress.value = calculatePasswordStrength(passwordInput);
+    else progress.value = 0;
+  },
+);
+</script>
+
+<template>
+  <div class="w-full space-y-4">
+    <!-- Heading -->
+    <div class="text-center md:pt-6">
+      <h2 class="text-lg font-semibold md:text-xl lg:text-2xl">Sign Up</h2>
+      <p class="mt-2 text-[13px] font-medium text-gray-400 md:text-sm">
+        Your Social Campaigns
+      </p>
+    </div>
+
+    <!-- Login with Social -->
+    <div class="flex flex-col gap-x-3 gap-y-3 md:flex-row">
+      <Button
+        variant="outline"
+        class="w-full py-5 text-center text-[13px] text-gray-600 md:text-sm"
+      >
+        <Icon
+          name="flat-color-icons:google"
+          color="black"
+          size="15"
+          class="mr-2"
+        />
+        Sign in with Google
+      </Button>
+
+      <Button
+        variant="outline"
+        class="w-full py-5 text-center text-[13px] text-gray-600 md:text-sm"
+      >
+        <Icon name="logos:apple" color="black" size="15" class="mr-2" />
+
+        Sign in with Apple
+      </Button>
+    </div>
+
+    <!-- Separator -->
+    <div class="flex w-full items-center gap-2">
+      <div class="h-[1px] w-full bg-gray-200" />
+      <p class="text-center text-xs text-gray-400">Or</p>
+      <div class="h-[1px] w-full bg-gray-200" />
+    </div>
+
+    <!-- Form -->
+    <form class="space-y-4" @submit="onSubmit">
+      <FormField v-slot="{ componentField }" name="fullName">
+        <FormItem>
+          <FormControl>
+            <Input
+              class="py-5 text-[13px] opacity-90 md:text-sm"
+              type="text"
+              placeholder="Full name *"
+              v-bind="componentField"
+            />
+          </FormControl>
+
+          <FormMessage class="text-[13px] opacity-85" />
+        </FormItem>
+      </FormField>
+
+      <FormField v-slot="{ componentField }" name="email">
+        <FormItem>
+          <FormControl>
+            <Input
+              class="py-5 text-[13px] opacity-90 md:text-sm"
+              type="text"
+              placeholder="Email *"
+              v-bind="componentField"
+            />
+          </FormControl>
+
+          <FormMessage class="text-[13px] opacity-85" />
+        </FormItem>
+      </FormField>
+
+      <FormField v-slot="{ componentField }" name="phone">
+        <FormItem>
+          <FormControl>
+            <Input
+              class="py-5 text-[13px] opacity-90 md:text-sm"
+              type="text"
+              placeholder="Phone"
+              v-bind="componentField"
+            />
+          </FormControl>
+
+          <FormMessage class="text-[13px] opacity-85" />
+        </FormItem>
+      </FormField>
+
+      <FormField v-slot="{ componentField }" name="password">
+        <FormItem>
+          <FormControl>
+            <Input
+              class="py-5 text-[13px] opacity-90 md:text-sm"
+              type="password"
+              placeholder="Password *"
+              v-bind="componentField"
+            />
+          </FormControl>
+
+          <!-- Password requirements -->
+          <div class="space-y-2 py-1">
+            <div class="flex items-center space-x-2">
+              <Progress
+                class="h-1 rounded-full bg-secondary"
+                :model-value="progress >= 25 ? 100 : 0"
+              />
+
+              <Progress
+                class="h-1 rounded-full bg-secondary"
+                :model-value="progress >= 50 ? 100 : 0"
+              />
+
+              <Progress
+                class="h-1 rounded-full bg-secondary"
+                :model-value="progress >= 75 ? 100 : 0"
+              />
+
+              <Progress
+                class="h-1 rounded-full bg-secondary"
+                :model-value="progress >= 100 ? 100 : 0"
+              />
+            </div>
+
+            <p
+              class="text-xs"
+              :class="[
+                errors['password']
+                  ? 'text-red-500 opacity-90'
+                  : 'text-gray-400 opacity-90',
+              ]"
+            >
+              Use 6 or more characters with a mix of letters, numbers & symbols.
+            </p>
+          </div>
+        </FormItem>
+      </FormField>
+
+      <FormField v-slot="{ componentField }" name="passwordConfirm">
+        <FormItem>
+          <FormControl>
+            <Input
+              class="py-5 text-[13px] opacity-90 md:text-sm"
+              type="password"
+              placeholder="Repeat Password *"
+              v-bind="componentField"
+            />
+          </FormControl>
+
+          <FormMessage class="text-[13px] opacity-85" />
+        </FormItem>
+      </FormField>
+
+      <FormField
+        v-slot="{ value, handleChange }"
+        type="checkbox"
+        name="acceptTerms"
+      >
+        <FormItem>
+          <div class="flex items-center gap-x-2 space-y-0">
+            <FormControl>
+              <Checkbox :checked="value" @update:checked="handleChange" />
+            </FormControl>
+
+            <FormLabel
+              class="user-select-none text-xs leading-none text-gray-700 md:text-[13px]"
+            >
+              I Accept the
+              <NuxtLink
+                to="/"
+                class="text-xs text-primary transition-all hover:underline hover:opacity-90 md:text-sm"
+                >Terms</NuxtLink
+              >
+            </FormLabel>
+          </div>
+
+          <FormMessage class="text-[13px] opacity-85" />
+        </FormItem>
+      </FormField>
+
+      <div class="flex w-full flex-row items-center py-2">
+        <Button
+          type="submit"
+          class="user-select-none w-full py-5"
+          :disabled="loading"
+        >
+          <Icon
+            v-if="loading"
+            name="lucide:loader"
+            class="mr-2 h-4 w-4 animate-spin"
+          />
+          Sign Up
+        </Button>
+      </div>
+    </form>
+
+    <!-- Sign up navigation -->
+    <div
+      class="flex flex-row items-center justify-center gap-2 text-[13px] font-medium md:text-sm"
+    >
+      <span class="text-gray-400">Already have an Account? </span>
+      <NuxtLink
+        to="/auth/sign-in"
+        class="text-primary transition hover:underline hover:opacity-90"
+        >Sign in</NuxtLink
+      >
+    </div>
+  </div>
+</template>
+
+<style lang="css" scoped></style>

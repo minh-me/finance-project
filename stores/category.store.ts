@@ -22,7 +22,8 @@ export const useCategoryStore = defineStore("categories", () => {
 
   const getCategoryIdByName = (name: string) => {
     return categories.value.find(
-      (category: Category) => category.name.toLowerCase() === name.toLowerCase(),
+      (category: Category) =>
+        category.name.toLowerCase() === name.toLowerCase(),
     )?._id;
   };
 

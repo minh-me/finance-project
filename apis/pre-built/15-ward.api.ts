@@ -7,15 +7,25 @@ import type { FetchOptions, PaginationParams } from "~/utils/types";
 const WARD_URL = "/wards";
 export const wardApi = {
   //  ----- Method: GET -----
-  paginate: (query?: PaginationParams, options?: FetchOptions): Promise<PaginateResponse<Ward>> => {
+  paginate: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<PaginateResponse<Ward>> => {
     return authFetch.get(`${WARD_URL}/paginate`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<Ward> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Ward> => {
     return authFetch.get(`${WARD_URL}/${id}`, query, options);
   },
 
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<Ward[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Ward[]> => {
     return guestFetch.get(WARD_URL, query, options);
   },
 
@@ -25,7 +35,11 @@ export const wardApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: Ward, options?: FetchOptions): Promise<Ward> => {
+  updateById: (
+    id: string,
+    body: Ward,
+    options?: FetchOptions,
+  ): Promise<Ward> => {
     return authFetch.patch(`${WARD_URL}/${id}`, body, options);
   },
 

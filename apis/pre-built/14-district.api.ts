@@ -14,11 +14,18 @@ export const districtApi = {
     return authFetch.get(`${DISTRICT_URL}/paginate`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<District> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<District> => {
     return authFetch.get(`${DISTRICT_URL}/${id}`, query, options);
   },
 
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<District[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<District[]> => {
     return guestFetch.get(DISTRICT_URL, query, options);
   },
 
@@ -28,7 +35,11 @@ export const districtApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: District, options?: FetchOptions): Promise<District> => {
+  updateById: (
+    id: string,
+    body: District,
+    options?: FetchOptions,
+  ): Promise<District> => {
     return authFetch.patch(`${DISTRICT_URL}/${id}`, body, options);
   },
 

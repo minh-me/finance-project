@@ -6,11 +6,18 @@ import type { FetchOptions, PaginationParams } from "~/utils/types";
 const MENU_URL = "/menus";
 export const menuApi = {
   //  ----- Method: GET -----
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<Menu> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Menu> => {
     return authFetch.get(`${MENU_URL}/${id}`, query, options);
   },
 
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<Menu[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Menu[]> => {
     return guestFetch.get(MENU_URL, query, options);
   },
 
@@ -20,7 +27,11 @@ export const menuApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: Menu, options?: FetchOptions): Promise<Menu> => {
+  updateById: (
+    id: string,
+    body: Menu,
+    options?: FetchOptions,
+  ): Promise<Menu> => {
     return authFetch.patch(`${MENU_URL}/${id}`, body, options);
   },
 

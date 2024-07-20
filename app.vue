@@ -1,20 +1,15 @@
-<script lang="ts" setup>
-const a = "new object";
-// console.log({ a });
-
-// const getUsers = () => {
-//   return {
-//     name: "minh",
-//   };
-// };
-// console.log(getUsers());
-</script>
-
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <Button variant="destructive"> Destructive </Button>
+  <NuxtLayout>
+    <NuxtPage />
 
-    <NuxtWelcome />
-  </div>
+    <Toaster />
+  </NuxtLayout>
 </template>
+
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
+html {
+  font-family: "Inter", sans-serif;
+}
+</style>

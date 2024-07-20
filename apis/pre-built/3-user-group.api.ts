@@ -14,11 +14,18 @@ export const userGroupGroupApi = {
     return authFetch.get(`${USER_GROUP_URL}/paginate`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<UserGroup> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<UserGroup> => {
     return authFetch.get(`${USER_GROUP_URL}/${id}`, query, options);
   },
 
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<UserGroup[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<UserGroup[]> => {
     return guestFetch.get(USER_GROUP_URL, query, options);
   },
 
@@ -28,7 +35,11 @@ export const userGroupGroupApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: UserGroup, options?: FetchOptions): Promise<UserGroup> => {
+  updateById: (
+    id: string,
+    body: UserGroup,
+    options?: FetchOptions,
+  ): Promise<UserGroup> => {
     return authFetch.patch(`${USER_GROUP_URL}/${id}`, body, options);
   },
 

@@ -6,11 +6,18 @@ import type { FetchOptions, PaginationParams } from "~/utils/types";
 const CATEGORY_URL = "/categories";
 export const categoryApi = {
   //  ----- Method: GET -----
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<Category> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Category> => {
     return guestFetch.get(`${CATEGORY_URL}/${id}`, query, options);
   },
 
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<Category[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Category[]> => {
     return guestFetch.get(CATEGORY_URL, query, options);
   },
 
@@ -20,7 +27,11 @@ export const categoryApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: Category, options?: FetchOptions): Promise<Category> => {
+  updateById: (
+    id: string,
+    body: Category,
+    options?: FetchOptions,
+  ): Promise<Category> => {
     return authFetch.patch(`${CATEGORY_URL}/${id}`, body, options);
   },
 

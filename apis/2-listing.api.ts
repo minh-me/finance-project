@@ -22,7 +22,11 @@ export const listingApi = {
     return guestFetch.get(`${LISTING_URL}/paginate`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<Listing> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Listing> => {
     return authFetch.get(`${LISTING_URL}/${id}`, query, options);
   },
 
@@ -32,11 +36,23 @@ export const listingApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateWishlist: (id: string, action: ActionEnum, options?: FetchOptions): Promise<Listing> => {
-    return authFetch.patch(`${LISTING_URL}/${id}/wishlist/${action}`, {}, options);
+  updateWishlist: (
+    id: string,
+    action: ActionEnum,
+    options?: FetchOptions,
+  ): Promise<Listing> => {
+    return authFetch.patch(
+      `${LISTING_URL}/${id}/wishlist/${action}`,
+      {},
+      options,
+    );
   },
 
-  updateById: (id: string, body: Listing, options?: FetchOptions): Promise<Listing> => {
+  updateById: (
+    id: string,
+    body: Listing,
+    options?: FetchOptions,
+  ): Promise<Listing> => {
     return authFetch.patch(`${LISTING_URL}/${id}`, body, options);
   },
 

@@ -14,15 +14,25 @@ export const userApi = {
     return authFetch.get(`${USER_URL}/me`, query);
   },
 
-  paginate: (query?: PaginationParams, options?: FetchOptions): Promise<PaginateResponse<User>> => {
+  paginate: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<PaginateResponse<User>> => {
     return authFetch.get(`${USER_URL}/paginate`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<User> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<User> => {
     return authFetch.get(`${USER_URL}/${id}`, query, options);
   },
 
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<User[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<User[]> => {
     return guestFetch.get(USER_URL, query, options);
   },
 
@@ -40,7 +50,11 @@ export const userApi = {
     return authFetch.patch(`${USER_URL}/${userId}/status`, { status });
   },
 
-  updateById: (id: string, body: User, options?: FetchOptions): Promise<User> => {
+  updateById: (
+    id: string,
+    body: User,
+    options?: FetchOptions,
+  ): Promise<User> => {
     return authFetch.patch(`${USER_URL}/${id}`, body, options);
   },
 

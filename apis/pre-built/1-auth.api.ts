@@ -22,15 +22,24 @@ export const authApi = {
     return guestFetch.post(`${AUTH_URL}/login`, data, options);
   },
 
-  socialLogin: (data: SocialLogin, options?: FetchOptions): Promise<AuthUser> => {
+  socialLogin: (
+    data: SocialLogin,
+    options?: FetchOptions,
+  ): Promise<AuthUser> => {
     return guestFetch.post(`${AUTH_URL}/social_login`, data, options);
   },
 
-  sendToken: (data: Register, options?: FetchOptions): Promise<SendTokenToRegister> => {
+  sendToken: (
+    data: Register,
+    options?: FetchOptions,
+  ): Promise<SendTokenToRegister> => {
     return guestFetch.post(`${AUTH_URL}/send_token`, data, options);
   },
 
-  activateToken: (data: Register, options?: FetchOptions): Promise<AuthUser> => {
+  activateToken: (
+    data: Register,
+    options?: FetchOptions,
+  ): Promise<AuthUser> => {
     return guestFetch.post(`${AUTH_URL}/activate_token`, data, options);
   },
 
@@ -49,11 +58,17 @@ export const authApi = {
     return guestFetch.post(`${AUTH_URL}/refresh_token`, { token }, options);
   },
 
-  forgotPassword: (email: string, options?: FetchOptions): Promise<ForgotPasswordResponse> => {
+  forgotPassword: (
+    email: string,
+    options?: FetchOptions,
+  ): Promise<ForgotPasswordResponse> => {
     return guestFetch.post(`${AUTH_URL}/forgot_password`, { email }, options);
   },
 
-  resetPassword: (body: ResetPassword, options?: FetchOptions): Promise<AuthUser> => {
+  resetPassword: (
+    body: ResetPassword,
+    options?: FetchOptions,
+  ): Promise<AuthUser> => {
     return guestFetch.post(`${AUTH_URL}/reset_password`, body, options);
   },
 };

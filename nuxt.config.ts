@@ -2,7 +2,13 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
   ssr: false,
-  modules: ["@nuxtjs/eslint-module", "@nuxtjs/tailwindcss", "shadcn-nuxt", "@pinia/nuxt"],
+  modules: [
+    "@nuxtjs/eslint-module",
+    "@nuxtjs/tailwindcss",
+    "shadcn-nuxt",
+    "@pinia/nuxt",
+    "@nuxt/icon",
+  ],
   runtimeConfig: {
     app: {},
     openaiKey: "",
@@ -13,4 +19,17 @@ export default defineNuxtConfig({
       firebaseConfig: "",
     },
   },
+
+  components: [
+    {
+      path: "~/components/shared",
+      extensions: [".vue"],
+      prefix: "",
+    },
+    {
+      path: "~/components",
+      extensions: [".vue"],
+      prefix: "",
+    },
+  ],
 });

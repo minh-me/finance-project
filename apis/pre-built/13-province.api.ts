@@ -14,11 +14,18 @@ export const provinceApi = {
     return authFetch.get(`${PROVINCE_URL}/paginate`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<Province> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Province> => {
     return authFetch.get(`${PROVINCE_URL}/${id}`, query, options);
   },
 
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<Province[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Province[]> => {
     return guestFetch.get(PROVINCE_URL, query, options);
   },
 
@@ -28,7 +35,11 @@ export const provinceApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: Province, options?: FetchOptions): Promise<Province> => {
+  updateById: (
+    id: string,
+    body: Province,
+    options?: FetchOptions,
+  ): Promise<Province> => {
     return authFetch.patch(`${PROVINCE_URL}/${id}`, body, options);
   },
 

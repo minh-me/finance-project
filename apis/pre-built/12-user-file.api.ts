@@ -14,12 +14,19 @@ export const userFileApi = {
     return authFetch.get(`${USER_FILE_URL}/paginate`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<UserFile> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<UserFile> => {
     return authFetch.get(`${USER_FILE_URL}/${id}`, query, options);
   },
 
   //  ----- Method: PATCH -----
-  deleteByFileName: (fileName: string, options?: FetchOptions): Promise<UserFile> => {
+  deleteByFileName: (
+    fileName: string,
+    options?: FetchOptions,
+  ): Promise<UserFile> => {
     return authFetch.delete(`${USER_FILE_URL}/filename/${fileName}`, options);
   },
 

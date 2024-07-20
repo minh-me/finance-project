@@ -15,7 +15,9 @@ export const useListingQuery = () => {
 
     if (rest.category)
       Object.assign(obj, {
-        categoryIds: useCategoryStore().getCategoryIdByName(rest.category as string),
+        categoryIds: useCategoryStore().getCategoryIdByName(
+          rest.category as string,
+        ),
       });
 
     return obj;

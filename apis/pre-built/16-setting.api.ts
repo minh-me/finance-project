@@ -14,7 +14,11 @@ export const settingApi = {
     return authFetch.get(`${SETTING_URL}/one`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<Setting> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Setting> => {
     return authFetch.get(`${SETTING_URL}/${id}`, query, options);
   },
 
@@ -24,7 +28,11 @@ export const settingApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: Setting, options?: FetchOptions): Promise<Setting> => {
+  updateById: (
+    id: string,
+    body: Setting,
+    options?: FetchOptions,
+  ): Promise<Setting> => {
     return authFetch.patch(`${SETTING_URL}/${id}`, body, options);
   },
 

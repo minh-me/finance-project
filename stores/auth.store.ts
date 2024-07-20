@@ -16,7 +16,6 @@ export const useAuthStore = defineStore("auth", () => {
 
   const register = async (input: Register) => {
     const data = await _asyncHandler(() => authApi.register(input));
-    console.log({ data });
 
     if (data) _setAuth(data);
 

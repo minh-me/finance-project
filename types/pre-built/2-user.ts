@@ -1,4 +1,9 @@
-import type { AccountStatus, AccountTypeEnum, GenderEnum, RoleEnum } from "~/utils/enums";
+import type {
+  AccountStatus,
+  AccountTypeEnum,
+  GenderEnum,
+  RoleEnum,
+} from "~/utils/enums";
 import type { UserGroup } from "./3-user-group";
 
 export type User = {

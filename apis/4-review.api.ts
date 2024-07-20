@@ -6,15 +6,25 @@ import type { FetchOptions, PaginationParams } from "~/utils/types";
 const REVIEW_URL = "/reviews";
 export const bookingApi = {
   //  ----- Method: GET -----
-  paginate: (query?: PaginationParams, options?: FetchOptions): Promise<Review[]> => {
+  paginate: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Review[]> => {
     return guestFetch.get(`${REVIEW_URL}/paginate`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<Review> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Review> => {
     return authFetch.get(`${REVIEW_URL}/${id}`, query, options);
   },
 
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<Review[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<Review[]> => {
     return guestFetch.get(REVIEW_URL, query, options);
   },
 
@@ -24,7 +34,11 @@ export const bookingApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: Review, options?: FetchOptions): Promise<Review> => {
+  updateById: (
+    id: string,
+    body: Review,
+    options?: FetchOptions,
+  ): Promise<Review> => {
     return authFetch.patch(`${REVIEW_URL}/${id}`, body, options);
   },
 

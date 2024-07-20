@@ -24,8 +24,11 @@ export const handleError = (error: any) => {
     errorTitle = errorData.title;
   }
 
-  const errorMsg = error.data ? formatErrorMsg(errorType, error.data.errors) : error.errorMsg;
+  const errorMsg = error.data
+    ? formatErrorMsg(errorType, error.data.errors)
+    : error.errorMsg;
 
+  // eslint-disable-next-line no-console
   console.log("API ERROR :::::", { errorTitle, errorMsg });
 
   toast({

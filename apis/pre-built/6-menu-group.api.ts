@@ -14,11 +14,18 @@ export const menuGroupApi = {
     return authFetch.get(`${MENU_GROUP_URL}/paginate`, query, options);
   },
 
-  getById: (id: string, query?: PaginationParams, options?: FetchOptions): Promise<MenuGroup> => {
+  getById: (
+    id: string,
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<MenuGroup> => {
     return authFetch.get(`${MENU_GROUP_URL}/${id}`, query, options);
   },
 
-  getAll: (query?: PaginationParams, options?: FetchOptions): Promise<MenuGroup[]> => {
+  getAll: (
+    query?: PaginationParams,
+    options?: FetchOptions,
+  ): Promise<MenuGroup[]> => {
     return guestFetch.get(MENU_GROUP_URL, query, options);
   },
 
@@ -28,7 +35,11 @@ export const menuGroupApi = {
   },
 
   //  ----- Method: PATCH -----
-  updateById: (id: string, body: MenuGroup, options?: FetchOptions): Promise<MenuGroup> => {
+  updateById: (
+    id: string,
+    body: MenuGroup,
+    options?: FetchOptions,
+  ): Promise<MenuGroup> => {
     return authFetch.patch(`${MENU_GROUP_URL}/${id}`, body, options);
   },
 

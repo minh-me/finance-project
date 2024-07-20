@@ -20,9 +20,13 @@ export const useWishlistStore = defineStore("wishlist", () => {
     pending,
     data: listingPagination,
     error,
-  } = useAsyncData("wishlist-pagination", () => listingApi.getWishlistPaginate(filter.value), {
-    watch: [filterWatch, authUser],
-  });
+  } = useAsyncData(
+    "wishlist-pagination",
+    () => listingApi.getWishlistPaginate(filter.value),
+    {
+      watch: [filterWatch, authUser],
+    },
+  );
 
   watch(
     () => error.value,
