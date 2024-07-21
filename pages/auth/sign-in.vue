@@ -21,49 +21,39 @@ const onSubmit = handleSubmit(values => {
     ),
   });
 });
+const navigateToSignUp = () => {
+  const query = useRoute().query;
+
+  return useRouter().push({
+    path: "/auth/sign-up",
+    query: query,
+  });
+};
+
+const navigateToForgotPassword = () => {
+  const query = useRoute().query;
+
+  return useRouter().push({
+    path: "/auth/reset-password",
+    query: query,
+  });
+};
 </script>
 
 <template>
   <div class="w-full space-y-8">
     <!-- Heading -->
-    <div class="text-center md:pt-6">
-      <h2 class="text-lg font-semibold md:text-xl lg:text-2xl">Sign In</h2>
-      <p class="mt-2 text-[13px] font-medium text-gray-400 md:text-sm">
-        Your Social Campaigns
-      </p>
-    </div>
+    <AuthHeading
+      title="Sign In"
+      description="Your Social Campaigns"
+      class="text-center"
+    />
 
     <!-- Login with Social -->
-    <div class="flex flex-col gap-x-3 gap-y-3 md:flex-row">
-      <Button
-        variant="outline"
-        class="w-full py-5 text-center text-[13px] text-gray-600 md:text-sm"
-      >
-        <Icon
-          name="flat-color-icons:google"
-          color="black"
-          size="15"
-          class="mr-2"
-        />
-        Sign in with Google
-      </Button>
-
-      <Button
-        variant="outline"
-        class="w-full py-5 text-center text-[13px] text-gray-600 md:text-sm"
-      >
-        <Icon name="logos:apple" color="black" size="15" class="mr-2" />
-
-        Sign in with Apple
-      </Button>
-    </div>
+    <AuthSocialLogin />
 
     <!-- Separator -->
-    <div class="flex w-full items-center gap-2">
-      <div class="h-[1px] w-full bg-gray-200" />
-      <p class="text-center text-xs text-gray-400">Or</p>
-      <div class="h-[1px] w-full bg-gray-200" />
-    </div>
+    <Separator label="Or" />
 
     <!-- Form -->
     <form class="space-y-4 md:space-y-6" @submit="onSubmit">
@@ -103,12 +93,15 @@ const onSubmit = handleSubmit(values => {
 
           <FormMessage class="text-[13px] opacity-85" />
 
-          <div class="py-1 text-end">
-            <span
-              class="cursor-pointer py-1 text-[13px] text-primary transition hover:underline hover:opacity-90 md:text-sm"
+          <div class="text-end">
+            <Button
+              type="button"
+              variant="link"
+              class="text-[13px] font-normal text-primary md:text-sm"
+              @click="navigateToForgotPassword"
             >
               Forgot Password ?
-            </span>
+            </Button>
           </div>
         </FormItem>
       </FormField>
@@ -134,11 +127,14 @@ const onSubmit = handleSubmit(values => {
       class="flex flex-row items-center justify-center gap-2 text-[13px] font-medium md:text-sm"
     >
       <span class="text-gray-400">Not a Member yet? </span>
-      <NuxtLink
-        to="/auth/sign-up"
-        class="text-primary transition hover:underline hover:opacity-90"
-        >Sign up</NuxtLink
+      <Button
+        type="button"
+        variant="link"
+        class="px-0 text-primary transition hover:underline hover:opacity-90"
+        @click="navigateToSignUp"
       >
+        Sign up
+      </Button>
     </div>
   </div>
 </template>

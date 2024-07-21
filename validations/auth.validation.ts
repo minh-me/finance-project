@@ -30,18 +30,16 @@ export const calculatePasswordStrength = (password: string) => {
 const phoneRegex = /^(\+\d{1,3}[- ]?)?\d{10}$/; // Simplified phone number regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email regex
 
-export const PasswordSchema = z
-  .string({ required_error: "Password is required" })
-  .min(6, { message: "Password must be at least 6 characters" });
+export const AuthKeySchema = z
+  .string({ required_error: "Email or phone is required" })
+  .trim()
+  .refine(val => phoneRegex.test(val) || emailRegex.test(val), {
+    message: "Invalid email or phone",
+  });
 
 export const LoginSchema = toTypedSchema(
   z.object({
-    authKey: z
-      .string({ required_error: "Email or phone is required" })
-      .trim()
-      .refine(val => phoneRegex.test(val) || emailRegex.test(val), {
-        message: "Invalid email or phone",
-      }),
+    authKey: AuthKeySchema,
     password: z
       .string({ required_error: "Password is required" })
       .min(6, { message: "Password must be at least 6 characters" }),
@@ -55,13 +53,7 @@ export const RegisterSchema = toTypedSchema(
         .string({ required_error: "Full name is required" })
         .trim()
         .min(3, { message: "Full name must be at least 3 characters" }),
-      email: z.string({ required_error: "Email is required" }).trim().email(),
-      phone: z
-        .string()
-        .optional()
-        .refine(val => !val || phoneRegex.test(val), {
-          message: "Invalid phone number",
-        }),
+      authKey: AuthKeySchema,
       password: z
         .string({ required_error: "Password is required" })
         .refine(val => !!calculatePasswordStrength(val), {
@@ -76,6 +68,34 @@ export const RegisterSchema = toTypedSchema(
         .refine(val => val, {
           message: "Please accept the terms and conditions",
         }),
+    })
+    .refine(data => data.password === data.passwordConfirm, {
+      path: ["passwordConfirm"],
+      message: "Passwords do not match",
+    }),
+);
+
+export const ForgotSchema = toTypedSchema(
+  z.object({
+    authKey: AuthKeySchema,
+    otpCode: z
+      .string({
+        required_error: "OTP code is required",
+      })
+      .length(4, { message: "OTP code must be exactly 4 characters" }),
+  }),
+);
+
+export const ResetPasswordSchema = toTypedSchema(
+  z
+    .object({
+      password: z
+        .string({ required_error: "Password is required" })
+        .refine(val => !!calculatePasswordStrength(val), {
+          message: "Password is too weak",
+        }),
+      passwordConfirm: z.string({ required_error: "Password is required" }),
+      isLogoutOthers: z.boolean().optional(),
     })
     .refine(data => data.password === data.passwordConfirm, {
       path: ["passwordConfirm"],

@@ -34,52 +34,36 @@ watch(
     else progress.value = 0;
   },
 );
+
+const navigateToSignIn = () => {
+  const query = useRoute().query;
+
+  return useRouter().push({
+    path: "/auth/sign-in",
+    query: query,
+  });
+};
 </script>
 
 <template>
   <div class="w-full space-y-4">
     <!-- Heading -->
-    <div class="text-center md:pt-6">
-      <h2 class="text-lg font-semibold md:text-xl lg:text-2xl">Sign Up</h2>
-      <p class="mt-2 text-[13px] font-medium text-gray-400 md:text-sm">
-        Your Social Campaigns
-      </p>
-    </div>
+    <AuthHeading
+      title="Sign Up"
+      description="Your Social Campaigns"
+      class="text-center"
+    />
 
     <!-- Login with Social -->
-    <div class="flex flex-col gap-x-3 gap-y-3 md:flex-row">
-      <Button
-        variant="outline"
-        class="w-full py-5 text-center text-[13px] text-gray-600 md:text-sm"
-      >
-        <Icon
-          name="flat-color-icons:google"
-          color="black"
-          size="15"
-          class="mr-2"
-        />
-        Sign in with Google
-      </Button>
-
-      <Button
-        variant="outline"
-        class="w-full py-5 text-center text-[13px] text-gray-600 md:text-sm"
-      >
-        <Icon name="logos:apple" color="black" size="15" class="mr-2" />
-
-        Sign in with Apple
-      </Button>
-    </div>
+    <AuthSocialLogin />
 
     <!-- Separator -->
-    <div class="flex w-full items-center gap-2">
-      <div class="h-[1px] w-full bg-gray-200" />
-      <p class="text-center text-xs text-gray-400">Or</p>
-      <div class="h-[1px] w-full bg-gray-200" />
+    <div class="py-2">
+      <Separator label="Or" />
     </div>
 
     <!-- Form -->
-    <form class="space-y-4" @submit="onSubmit">
+    <form class="space-y-4 md:space-y-6" @submit="onSubmit">
       <FormField v-slot="{ componentField }" name="fullName">
         <FormItem>
           <FormControl>
@@ -95,28 +79,13 @@ watch(
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="email">
+      <FormField v-slot="{ componentField }" name="authKey">
         <FormItem>
           <FormControl>
             <Input
               class="py-5 text-[13px] opacity-90 md:text-sm"
               type="text"
-              placeholder="Email *"
-              v-bind="componentField"
-            />
-          </FormControl>
-
-          <FormMessage class="text-[13px] opacity-85" />
-        </FormItem>
-      </FormField>
-
-      <FormField v-slot="{ componentField }" name="phone">
-        <FormItem>
-          <FormControl>
-            <Input
-              class="py-5 text-[13px] opacity-90 md:text-sm"
-              type="text"
-              placeholder="Phone"
+              placeholder="Email or Phone *"
               v-bind="componentField"
             />
           </FormControl>
@@ -206,6 +175,7 @@ watch(
               I Accept the
               <NuxtLink
                 to="/"
+                target="_blank"
                 class="text-xs text-primary transition-all hover:underline hover:opacity-90 md:text-sm"
                 >Terms</NuxtLink
               >
@@ -237,11 +207,14 @@ watch(
       class="flex flex-row items-center justify-center gap-2 text-[13px] font-medium md:text-sm"
     >
       <span class="text-gray-400">Already have an Account? </span>
-      <NuxtLink
-        to="/auth/sign-in"
-        class="text-primary transition hover:underline hover:opacity-90"
-        >Sign in</NuxtLink
+      <Button
+        type="button"
+        variant="link"
+        class="px-0 text-primary transition hover:underline hover:opacity-90"
+        @click="navigateToSignIn"
       >
+        Sign In
+      </Button>
     </div>
   </div>
 </template>

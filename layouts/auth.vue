@@ -61,18 +61,21 @@ const onLocaleSelect = (language: Locale) => {
           <div class="flex items-center justify-end gap-x-3 md:gap-x-6">
             <NuxtLink
               to="/"
+              target="_blank"
               class="text-xs text-primary transition-all hover:underline hover:opacity-90 md:text-sm"
             >
               Terms
             </NuxtLink>
             <NuxtLink
               to="/"
+              target="_blank"
               class="text-xs text-primary transition-all hover:underline hover:opacity-90 md:text-sm"
             >
               Plans
             </NuxtLink>
             <NuxtLink
               to="/"
+              target="_blank"
               class="text-xs text-primary transition-all hover:underline hover:opacity-90 md:text-sm"
             >
               Contact Us
