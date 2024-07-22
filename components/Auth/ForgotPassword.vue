@@ -6,11 +6,12 @@ interface Props {
   initialValues?: { authKey?: string; otpCode?: string };
 }
 interface Emits {
-  (e: "onSubmit", values: { authKey: string; otpCode: string }): void;
+  (e: "onSubmitted", values: { authKey: string; otpCode: string }): void;
 }
 
-const emits = defineEmits<Emits>();
 const props = defineProps<Props>();
+const emits = defineEmits<Emits>();
+
 const loading = ref(false);
 const otpCodeExpiredCountDown = ref(0);
 
@@ -57,7 +58,7 @@ const onSubmit = handleSubmit(() => {
     ),
   });
 
-  emits("onSubmit", {
+  emits("onSubmitted", {
     authKey: values.authKey!,
     otpCode: values.otpCode!,
   });

@@ -1,12 +1,26 @@
 <script setup lang="ts">
+import { toast } from "~/components/ui/toast";
+import type { AuthUser } from "~/types/pre-built/1-auth";
+
 definePageMeta({ layout: "auth" });
 
 const isPasswordVisible = ref(false);
 
 const forgotValues = ref<{ authKey: string; otpCode: string }>();
-const onForgotSubmit = (values: { authKey: string; otpCode: string }) => {
+const onForgotSubmitted = (values: { authKey: string; otpCode: string }) => {
   forgotValues.value = values;
   isPasswordVisible.value = true;
+};
+
+const onResetPasswordSubmitted = (values: AuthUser) => {
+  toast({
+    title: "You submitted the following values:",
+    description: h(
+      "pre",
+      { class: "mt-2 w-[340px] rounded-md bg-slate-950 p-4" },
+      h("code", { class: "text-white" }, JSON.stringify(values, null, 2)),
+    ),
+  });
 };
 </script>
 
@@ -27,17 +41,18 @@ const onForgotSubmit = (values: { authKey: string; otpCode: string }) => {
       class="text-center"
     />
 
-    <!-- Forgot Password Form -->
-    <AuthForgotPasswordForm
+    <!-- Forgot Password -->
+    <AuthForgotPassword
       v-if="!isPasswordVisible"
       :initial-values="forgotValues"
-      @on-submit="onForgotSubmit"
+      @on-submitted="onForgotSubmitted"
     />
 
-    <!-- Reset Password Form -->
-    <AuthResetPasswordForm
+    <!-- Reset Password -->
+    <AuthResetPassword
       v-if="isPasswordVisible"
       :initial-values="forgotValues"
+      @on-submitted="onResetPasswordSubmitted"
     />
 
     <!-- Navigation -->

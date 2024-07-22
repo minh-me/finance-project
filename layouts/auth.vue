@@ -18,7 +18,7 @@ const onLocaleSelect = (language: Locale) => {
 
 <template>
   <div
-    class="h-screen w-screen overflow-y-auto bg-[url('/auth-bg.jpg')] bg-cover bg-fixed bg-center bg-no-repeat"
+    class="h-screen w-screen overflow-y-auto bg-[url('/auth-bg.jpg')] bg-cover bg-fixed bg-center bg-no-repeat dark:bg-[url('/auth-bg-dark.jpg')]"
   >
     <div
       class="flex flex-col justify-center gap-8 px-8 py-10 md:h-full md:w-full md:items-center lg:flex-row lg:justify-evenly lg:px-14 lg:py-16"
@@ -42,7 +42,7 @@ const onLocaleSelect = (language: Locale) => {
 
       <!-- Form -->
       <div
-        class="flex flex-col justify-center space-y-12 rounded-xl bg-white px-8 py-16 sm:px-14 md:h-full md:w-[600px] md:flex-1 md:px-20 lg:flex-initial lg:px-20 lg:py-12"
+        class="flex flex-col justify-center space-y-12 rounded-xl bg-white px-8 py-16 dark:bg-[#15171C] sm:px-14 md:h-full md:w-[600px] md:flex-1 md:px-20 lg:flex-initial lg:px-20 lg:py-12"
       >
         <div class="md:flex-1 md:content-center">
           <slot />

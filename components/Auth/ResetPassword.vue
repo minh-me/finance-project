@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
+import type { AuthUser } from "~/types/pre-built/1-auth";
+import { AccountStatus, AccountTypeEnum, RoleEnum } from "~/utils/enums";
 import {
   calculatePasswordStrength,
   ResetPasswordSchema,
@@ -8,8 +10,13 @@ import {
 interface Props {
   initialValues?: { authKey?: string; otpCode?: string };
 }
+interface Emits {
+  (e: "onSubmitted", values: AuthUser): void;
+}
 
 const props = defineProps<Props>();
+const emits = defineEmits<Emits>();
+
 const loading = ref(false);
 
 const { handleSubmit, values, errors } = useForm({
@@ -17,17 +24,34 @@ const { handleSubmit, values, errors } = useForm({
 });
 
 const onSubmit = handleSubmit(() => {
-  const from = useRoute().query.from;
-
-  if (!from) return navigateTo("/");
-
-  const [path, queryString = {}] = (from as string).split("?");
-  const query = Object.fromEntries(new URLSearchParams(queryString));
-
-  useRouter().push({
-    path: `/${path}`,
-    query,
+  emits("onSubmitted", {
+    accessToken: {
+      expiresAt: Date.now() + 5 * 60 * 1000,
+      token: "1234",
+    },
+    refreshToken: {
+      expiresAt: Date.now() + 5 * 60 * 1000,
+      token: "1234",
+    },
+    user: {
+      accountType: AccountTypeEnum.Local,
+      fmcEnabled: true,
+      fullName: "John Doe",
+      roles: [RoleEnum.User],
+      status: AccountStatus.Verified,
+      _id: "1234",
+    },
   });
+
+  // if (!from) return navigateTo("/");
+
+  // const [path, queryString = {}] = (from as string).split("?");
+  // const query = Object.fromEntries(new URLSearchParams(queryString));
+
+  // useRouter().push({
+  //   path: `/${path}`,
+  //   query,
+  // });
 });
 
 const progress = ref(0);
