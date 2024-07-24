@@ -1,26 +1,24 @@
 <script setup lang="ts">
-import { toast } from "~/components/ui/toast";
-import type { AuthUser } from "~/types/pre-built/1-auth";
+import type { VerifyOtp } from "~/types/pre-built/10-otp";
 
-definePageMeta({ layout: "auth" });
+definePageMeta({ layout: "auth", middleware: "only-visitor" });
 
 const isPasswordVisible = ref(false);
+const forgotValues = ref<VerifyOtp>();
 
-const forgotValues = ref<{ authKey: string; otpCode: string }>();
-const onForgotSubmitted = (values: { authKey: string; otpCode: string }) => {
+const { goToQueryFrom, goToSignIn } = useGoTo();
+
+const goBack = () => {
+  isPasswordVisible.value = false;
+};
+
+const onForgotSubmitted = (values: VerifyOtp) => {
   forgotValues.value = values;
   isPasswordVisible.value = true;
 };
 
-const onResetPasswordSubmitted = (values: AuthUser) => {
-  toast({
-    title: "You submitted the following values:",
-    description: h(
-      "pre",
-      { class: "mt-2 w-[340px] rounded-md bg-slate-950 p-4" },
-      h("code", { class: "text-white" }, JSON.stringify(values, null, 2)),
-    ),
-  });
+const onResetPasswordSubmitted = () => {
+  goToQueryFrom();
 };
 </script>
 
@@ -50,7 +48,7 @@ const onResetPasswordSubmitted = (values: AuthUser) => {
 
     <!-- Reset Password -->
     <AuthResetPassword
-      v-if="isPasswordVisible"
+      v-if="isPasswordVisible && forgotValues?.otpCode"
       :initial-values="forgotValues"
       @on-submitted="onResetPasswordSubmitted"
     />
@@ -61,12 +59,14 @@ const onResetPasswordSubmitted = (values: AuthUser) => {
     >
       <template v-if="!isPasswordVisible">
         <span class="text-gray-400">Already have an Account? </span>
-        <NuxtLink
-          to="/auth/sign-in"
-          class="text-primary transition hover:underline hover:opacity-90"
+        <Button
+          type="button"
+          variant="link"
+          class="px-0 text-primary transition hover:underline hover:opacity-90"
+          @click="goToSignIn"
         >
-          Sign in
-        </NuxtLink>
+          Sign In
+        </Button>
       </template>
 
       <template v-else>
@@ -77,11 +77,7 @@ const onResetPasswordSubmitted = (values: AuthUser) => {
           <Icon name="carbon:chevron-left" />
           <span
             class="cursor-pointer transition hover:opacity-90"
-            @click="
-              () => {
-                isPasswordVisible = false;
-              }
-            "
+            @click="goBack"
           >
             Go back
           </span>

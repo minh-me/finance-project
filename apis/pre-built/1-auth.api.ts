@@ -3,7 +3,8 @@ import type {
   ForgotPasswordResponse,
   Login,
   Register,
-  ResetPassword,
+  ResetPasswordWithOtp,
+  ResetPasswordWithToken,
   SendOtpToRegister,
   SendTokenToRegister,
   SocialLogin,
@@ -65,10 +66,17 @@ export const authApi = {
     return guestFetch.post(`${AUTH_URL}/forgot_password`, { email }, options);
   },
 
-  resetPassword: (
-    body: ResetPassword,
+  resetPasswordWithToken: (
+    body: ResetPasswordWithToken,
     options?: FetchOptions,
   ): Promise<AuthUser> => {
-    return guestFetch.post(`${AUTH_URL}/reset_password`, body, options);
+    return guestFetch.post(`${AUTH_URL}/reset_password/token`, body, options);
+  },
+
+  resetPasswordWithOtp: (
+    body: ResetPasswordWithOtp,
+    options?: FetchOptions,
+  ): Promise<AuthUser> => {
+    return guestFetch.post(`${AUTH_URL}/reset_password/otp`, body, options);
   },
 };

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
 import type { AuthUser } from "~/types/pre-built/1-auth";
-import { AccountStatus, AccountTypeEnum, RoleEnum } from "~/utils/enums";
+import type { VerifyOtp } from "~/types/pre-built/10-otp";
 import {
   calculatePasswordStrength,
   ResetPasswordSchema,
 } from "~/validations/auth.validation";
 
 interface Props {
-  initialValues?: { authKey?: string; otpCode?: string };
+  initialValues: VerifyOtp;
 }
 interface Emits {
   (e: "onSubmitted", values: AuthUser): void;
@@ -16,42 +16,23 @@ interface Emits {
 
 const props = defineProps<Props>();
 const emits = defineEmits<Emits>();
-
-const loading = ref(false);
+const authStore = useAuthStore();
+const { loading, authUser } = storeToRefs(authStore);
 
 const { handleSubmit, values, errors } = useForm({
   validationSchema: ResetPasswordSchema,
 });
 
-const onSubmit = handleSubmit(() => {
-  emits("onSubmitted", {
-    accessToken: {
-      expiresAt: Date.now() + 5 * 60 * 1000,
-      token: "1234",
-    },
-    refreshToken: {
-      expiresAt: Date.now() + 5 * 60 * 1000,
-      token: "1234",
-    },
-    user: {
-      accountType: AccountTypeEnum.Local,
-      fmcEnabled: true,
-      fullName: "John Doe",
-      roles: [RoleEnum.User],
-      status: AccountStatus.Verified,
-      _id: "1234",
-    },
+const onSubmit = handleSubmit(async ({ password, isLogoutOthers }) => {
+  await authStore.resetPasswordWithOtp({
+    ...props.initialValues,
+    password,
+    isLogoutOthers,
   });
 
-  // if (!from) return navigateTo("/");
-
-  // const [path, queryString = {}] = (from as string).split("?");
-  // const query = Object.fromEntries(new URLSearchParams(queryString));
-
-  // useRouter().push({
-  //   path: `/${path}`,
-  //   query,
-  // });
+  if (authUser.value) {
+    emits("onSubmitted", authUser.value);
+  }
 });
 
 const progress = ref(0);

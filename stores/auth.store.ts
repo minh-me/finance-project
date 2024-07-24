@@ -3,7 +3,8 @@ import type {
   AuthUser,
   Login,
   Register,
-  ResetPassword,
+  ResetPasswordWithOtp,
+  ResetPasswordWithToken,
   SocialLogin,
 } from "~/types/pre-built/1-auth";
 import { handleError } from "~/utils/helpers/handle-error.helper";
@@ -14,16 +15,16 @@ export const useAuthStore = defineStore("auth", () => {
   const authUser = ref<AuthUser | null>(storageHelper.getAuth());
   const loading = ref<boolean>(false);
 
-  const register = async (input: Register) => {
-    const data = await _asyncHandler(() => authApi.register(input));
+  const login = async (input: Login) => {
+    const data = await _asyncHandler(() => authApi.login(input));
 
     if (data) _setAuth(data);
 
     return data;
   };
 
-  const login = async (input: Login) => {
-    const data = await _asyncHandler(() => authApi.login(input));
+  const register = async (input: Register) => {
+    const data = await _asyncHandler(() => authApi.register(input));
 
     if (data) _setAuth(data);
 
@@ -51,8 +52,20 @@ export const useAuthStore = defineStore("auth", () => {
     if (data) setForgotPassSent(true, data.email);
   };
 
-  const resetPassword = async (input: ResetPassword) => {
-    const data = await _asyncHandler(() => authApi.resetPassword(input));
+  const resetPasswordWithToken = async (input: ResetPasswordWithToken) => {
+    const data = await _asyncHandler(() =>
+      authApi.resetPasswordWithToken(input),
+    );
+
+    if (data) {
+      _setAuth(data);
+
+      return data;
+    }
+  };
+
+  const resetPasswordWithOtp = async (input: ResetPasswordWithOtp) => {
+    const data = await _asyncHandler(() => authApi.resetPasswordWithOtp(input));
 
     if (data) {
       _setAuth(data);
@@ -151,7 +164,8 @@ export const useAuthStore = defineStore("auth", () => {
     setForgotPassSent,
     forgotPassword,
     forgotPassSent,
-    resetPassword,
     socialLogin,
+    resetPasswordWithOtp,
+    resetPasswordWithToken,
   };
 });

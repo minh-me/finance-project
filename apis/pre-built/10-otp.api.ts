@@ -14,10 +14,17 @@ export const otpApi = {
 
   //  ----- Method: POST -----
   sendOtp: (body: Otp, options?: FetchOptions): Promise<OtpResponse> => {
-    return authFetch.post(OTP_URL, body, options);
+    return authFetch.post(`${OTP_URL}/send`, body, options);
   },
 
   verify: (body: VerifyOtp, options?: FetchOptions): Promise<OtpResponse> => {
-    return authFetch.post(OTP_URL, body, options);
+    return authFetch.post(`${OTP_URL}/verify`, body, options);
+  },
+
+  checkOtpValid: (
+    body: VerifyOtp,
+    options?: FetchOptions,
+  ): Promise<OtpResponse> => {
+    return authFetch.post(`${OTP_URL}/check-otp-valid`, body, options);
   },
 };

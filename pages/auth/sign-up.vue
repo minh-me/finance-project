@@ -1,28 +1,20 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
-import { toast } from "~/components/ui/toast";
+import { AccountTypeEnum } from "~/utils/enums";
 import {
   calculatePasswordStrength,
+  getAuthValues,
   RegisterSchema,
 } from "~/validations/auth.validation";
 
-definePageMeta({ layout: "auth" });
+definePageMeta({ layout: "auth", middleware: "only-visitor" });
 
-const loading = ref(false);
+const authStore = useAuthStore();
+const { goToQueryFrom, goToSignIn } = useGoTo();
+const { loading, authUser } = storeToRefs(authStore);
 
 const { handleSubmit, values, errors } = useForm({
   validationSchema: RegisterSchema,
-});
-
-const onSubmit = handleSubmit(values => {
-  toast({
-    title: "You submitted the following values:",
-    description: h(
-      "pre",
-      { class: "mt-2 w-[340px] rounded-md bg-slate-950 p-4" },
-      h("code", { class: "text-white" }, JSON.stringify(values, null, 2)),
-    ),
-  });
 });
 
 const progress = ref(0);
@@ -35,14 +27,16 @@ watch(
   },
 );
 
-const navigateToSignIn = () => {
-  const query = useRoute().query;
-
-  return useRouter().push({
-    path: "/auth/sign-in",
-    query: query,
+const onSubmit = handleSubmit(async formValues => {
+  const { authKey, acceptTerms, passwordConfirm, ...item } = formValues;
+  await authStore.register({
+    ...item,
+    ...getAuthValues(authKey),
+    accountType: AccountTypeEnum.Local,
   });
-};
+
+  if (authUser.value) goToQueryFrom();
+});
 </script>
 
 <template>
@@ -211,7 +205,7 @@ const navigateToSignIn = () => {
         type="button"
         variant="link"
         class="px-0 text-primary transition hover:underline hover:opacity-90"
-        @click="navigateToSignIn"
+        @click="goToSignIn"
       >
         Sign In
       </Button>

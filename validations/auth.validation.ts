@@ -30,6 +30,18 @@ export const calculatePasswordStrength = (password: string) => {
 const phoneRegex = /^(\+\d{1,3}[- ]?)?\d{10}$/; // Simplified phone number regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email regex
 
+export const getAuthValues = (authKey: string) => {
+  if (phoneRegex.test(authKey)) {
+    return { phone: authKey };
+  }
+
+  if (emailRegex.test(authKey)) {
+    return { email: authKey };
+  }
+
+  return {};
+};
+
 export const AuthKeySchema = z
   .string({ required_error: "Email or phone is required" })
   .trim()

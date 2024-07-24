@@ -31,11 +31,11 @@ export const handleError = (error: any) => {
   // eslint-disable-next-line no-console
   console.log("API ERROR :::::", { errorTitle, errorMsg });
 
-  toast({
-    title: errorTitle,
-    description: errorMsg,
-    variant: "destructive",
-  });
+  // toast({
+  //   title: errorTitle,
+  //   description: errorMsg,
+  //   variant: "destructive",
+  // });
 
   return {
     title: errorTitle,

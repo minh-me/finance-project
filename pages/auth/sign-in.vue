@@ -1,43 +1,22 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
-import { toast } from "~/components/ui/toast";
 import { LoginSchema } from "~/validations/auth.validation";
 
-definePageMeta({ layout: "auth" });
+definePageMeta({ layout: "auth", middleware: ["only-visitor"] });
 
-const loading = ref(false);
+const { goToQueryFrom, goToResetPassword, goToSignUp } = useGoTo();
+const authStore = useAuthStore();
+const { loading, authUser } = storeToRefs(authStore);
 
 const { isFieldDirty, handleSubmit } = useForm({
   validationSchema: LoginSchema,
 });
 
-const onSubmit = handleSubmit(values => {
-  toast({
-    title: "You submitted the following values:",
-    description: h(
-      "pre",
-      { class: "mt-2 w-[340px] rounded-md bg-slate-950 p-4" },
-      h("code", { class: "text-white" }, JSON.stringify(values, null, 2)),
-    ),
-  });
+const onSubmit = handleSubmit(async values => {
+  await authStore.login(values);
+
+  if (authUser.value) goToQueryFrom();
 });
-const navigateToSignUp = () => {
-  const query = useRoute().query;
-
-  return useRouter().push({
-    path: "/auth/sign-up",
-    query: query,
-  });
-};
-
-const navigateToForgotPassword = () => {
-  const query = useRoute().query;
-
-  return useRouter().push({
-    path: "/auth/reset-password",
-    query: query,
-  });
-};
 </script>
 
 <template>
@@ -98,7 +77,7 @@ const navigateToForgotPassword = () => {
               type="button"
               variant="link"
               class="text-[13px] font-normal text-primary md:text-sm"
-              @click="navigateToForgotPassword"
+              @click="goToResetPassword"
             >
               Forgot Password ?
             </Button>
@@ -131,7 +110,7 @@ const navigateToForgotPassword = () => {
         type="button"
         variant="link"
         class="px-0 text-primary transition hover:underline hover:opacity-90"
-        @click="navigateToSignUp"
+        @click="goToSignUp"
       >
         Sign up
       </Button>

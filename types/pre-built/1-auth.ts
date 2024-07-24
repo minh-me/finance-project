@@ -1,10 +1,12 @@
 import type { AccountTypeEnum, SendOtpToEnum } from "~/utils/enums";
 import type { User } from "./2-user";
 import type { AuthTokens } from "./9-token";
+import type { VerifyOtp } from "./10-otp";
 
 export type Register = {
   fullName: string;
-  email: string;
+  email?: string;
+  phone?: string;
   password: string;
   accountType: AccountTypeEnum;
 };
@@ -35,7 +37,13 @@ export type ForgotPasswordResponse = {
   expiresAt: number;
 };
 
-export type ResetPassword = {
+export type ResetPasswordWithToken = {
   email: string;
   expiresAt: number;
+  isLogoutOthers?: boolean;
+};
+
+export type ResetPasswordWithOtp = VerifyOtp & {
+  password: string;
+  isLogoutOthers?: boolean;
 };

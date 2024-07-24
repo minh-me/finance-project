@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
-import { toast } from "~/components/ui/toast";
-import { ForgotSchema } from "~/validations/auth.validation";
+import { otpApi } from "~/apis/pre-built/10-otp.api";
+import type { VerifyOtp } from "~/types/pre-built/10-otp";
+import { OtpTypeEnum, SendOtpToEnum } from "~/utils/enums";
+import { handleError } from "~/utils/helpers/handle-error.helper";
+import { ForgotSchema, getAuthValues } from "~/validations/auth.validation";
 interface Props {
-  initialValues?: { authKey?: string; otpCode?: string };
+  initialValues?: VerifyOtp;
 }
 interface Emits {
-  (e: "onSubmitted", values: { authKey: string; otpCode: string }): void;
+  (e: "onSubmitted", values: VerifyOtp): void;
 }
 
 const props = defineProps<Props>();
@@ -15,13 +18,17 @@ const emits = defineEmits<Emits>();
 const loading = ref(false);
 const otpCodeExpiredCountDown = ref(0);
 
-const { handleSubmit, values, errors } = useForm({
+const { handleSubmit, values, errors, setFieldError } = useForm({
   validationSchema: ForgotSchema,
-  initialValues: props.initialValues,
+  initialValues: {
+    otpCode: "",
+    authKey: props.initialValues?.email || props.initialValues?.phone,
+  },
 });
 
-const startCountDown = (seconds: number) => {
+const startCountDown = (seconds: number = 60) => {
   otpCodeExpiredCountDown.value = seconds;
+
   const interval = setInterval(() => {
     if (otpCodeExpiredCountDown.value > 0) {
       otpCodeExpiredCountDown.value--;
@@ -31,37 +38,53 @@ const startCountDown = (seconds: number) => {
   }, 1000);
 };
 
-const isOTPSent = ref(false);
-const onSubmitOTP = (values: { authKey?: string }) => {
-  toast({
-    title: "You submitted the following values:",
-    description: h(
-      "pre",
-      { class: "mt-2 w-[340px] rounded-md bg-slate-950 p-4" },
-      h("code", { class: "text-white" }, JSON.stringify(values, null, 2)),
-    ),
-  });
+const getOtpItemToSend = (authKey: string) => {
+  const { email, phone } = getAuthValues(authKey);
+  return {
+    otpType: OtpTypeEnum.ResetPassword,
+    sendOtpTo: phone ? SendOtpToEnum.Phone : SendOtpToEnum.Email,
+    email,
+    phone,
+  };
+};
 
-  startCountDown(60);
+const isOTPSent = ref(false);
+const isOtpSubmitting = ref(false);
+const onSubmitOTP = async (authKey: string) => {
+  try {
+    isOtpSubmitting.value = true;
+
+    await otpApi.sendOtp(getOtpItemToSend(authKey));
+
+    startCountDown();
+  } catch (error) {
+    handleError(error);
+  } finally {
+    isOtpSubmitting.value = false;
+  }
 
   isOTPSent.value = true;
 };
 
-const onSubmit = handleSubmit(() => {
-  clearInterval(otpCodeExpiredCountDown.value);
-  toast({
-    title: "You submitted the following values:",
-    description: h(
-      "pre",
-      { class: "mt-2 w-[340px] rounded-md bg-slate-950 p-4" },
-      h("code", { class: "text-white" }, JSON.stringify(values, null, 2)),
-    ),
-  });
+const onSubmit = handleSubmit(async values => {
+  try {
+    loading.value = true;
 
-  emits("onSubmitted", {
-    authKey: values.authKey!,
-    otpCode: values.otpCode!,
-  });
+    const verifyItem: VerifyOtp = {
+      ...getOtpItemToSend(values.authKey),
+      otpCode: values.otpCode!,
+    };
+
+    await otpApi.checkOtpValid(verifyItem);
+
+    clearInterval(otpCodeExpiredCountDown.value);
+    emits("onSubmitted", verifyItem);
+  } catch (error) {
+    setFieldError("otpCode", "Invalid OTP Code!");
+    handleError(error);
+  } finally {
+    loading.value = false;
+  }
 });
 </script>
 
@@ -91,16 +114,25 @@ const onSubmit = handleSubmit(() => {
               type="text"
               placeholder="OTP Code *"
               v-bind="componentField"
-              :disabled="!isOTPSent"
+              :disabled="!isOTPSent || isOtpSubmitting"
             />
 
             <Button
               class="absolute inset-y-0 end-0 z-20 h-full rounded-full bg-green-500 text-xs opacity-100 transition-opacity duration-300 hover:bg-green-500 hover:opacity-90"
               :disabled="
-                errors.authKey || !values.authKey || otpCodeExpiredCountDown
+                errors.authKey ||
+                !values.authKey ||
+                otpCodeExpiredCountDown ||
+                isOtpSubmitting
               "
-              @click="onSubmitOTP({ authKey: values.authKey })"
+              @click="onSubmitOTP(values.authKey!)"
             >
+              <Icon
+                v-if="isOtpSubmitting"
+                name="lucide:loader"
+                class="mr-2 h-4 w-4 animate-spin"
+              />
+
               {{
                 otpCodeExpiredCountDown
                   ? `Resend in ${otpCodeExpiredCountDown}`
@@ -118,7 +150,9 @@ const onSubmit = handleSubmit(() => {
       <Button
         type="submit"
         class="user-select-none w-full py-5"
-        :disabled="errors.otpCode || !values.otpCode"
+        :disabled="
+          errors.otpCode || !values.otpCode || isOtpSubmitting || loading
+        "
       >
         <Icon
           v-if="loading"
