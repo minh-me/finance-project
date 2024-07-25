@@ -3,6 +3,7 @@ import type { VerifyOtp } from "~/types/pre-built/10-otp";
 
 definePageMeta({ layout: "auth", middleware: "only-visitor" });
 
+const query = useRoute().query;
 const isPasswordVisible = ref(false);
 const forgotValues = ref<VerifyOtp>();
 
@@ -18,7 +19,7 @@ const onForgotSubmitted = (values: VerifyOtp) => {
 };
 
 const onResetPasswordSubmitted = () => {
-  goToQueryFrom();
+  goToQueryFrom(query?.from as string);
 };
 </script>
 
@@ -63,7 +64,7 @@ const onResetPasswordSubmitted = () => {
           type="button"
           variant="link"
           class="px-0 text-primary transition hover:underline hover:opacity-90"
-          @click="goToSignIn"
+          @click="goToSignIn(query)"
         >
           Sign In
         </Button>

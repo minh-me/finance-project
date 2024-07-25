@@ -1,28 +1,26 @@
 export const useGoTo = () => {
-  const route = useRoute();
   const router = useRouter();
-  const query = route.query;
 
-  const goToQueryFrom = () => {
-    if (!query?.from) return router.push({ path: "/" });
+  const goToQueryFrom = (from?: string) => {
+    if (!from) return router.push({ path: "/" });
 
-    const [path, queryString = {}] = (query.from as string).split("?");
+    const [path, queryString = {}] = (from as string).split("?");
 
     router.push({
-      path: `/${path}`,
+      path: `/${path.replace("/", "")}`,
       query: Object.fromEntries(new URLSearchParams(queryString)),
     });
   };
 
-  const goToSignIn = () => {
+  const goToSignIn = (query: Record<string, any> = {}) => {
     return router.push({ path: "/auth/sign-in", query });
   };
 
-  const goToSignUp = () => {
+  const goToSignUp = (query: Record<string, any> = {}) => {
     return router.push({ path: "/auth/sign-up", query });
   };
 
-  const goToResetPassword = () => {
+  const goToResetPassword = (query: Record<string, any> = {}) => {
     return router.push({ path: "/auth/reset-password", query });
   };
 

@@ -1,11 +1,14 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: "auth",
+});
+
 const authStore = useAuthStore();
 </script>
 
 <template>
   <div>
-    About Page
-    <Button @click="navigateTo('/auth/sign-in')">Login</Button>
+    <h1>About Page</h1>
     <Button variant="ghost" @click="authStore.logout">Logout</Button>
   </div>
 </template>

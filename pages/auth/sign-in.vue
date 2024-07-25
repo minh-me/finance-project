@@ -4,6 +4,7 @@ import { LoginSchema } from "~/validations/auth.validation";
 
 definePageMeta({ layout: "auth", middleware: ["only-visitor"] });
 
+const query = useRoute().query;
 const { goToQueryFrom, goToResetPassword, goToSignUp } = useGoTo();
 const authStore = useAuthStore();
 const { loading, authUser } = storeToRefs(authStore);
@@ -15,7 +16,7 @@ const { isFieldDirty, handleSubmit } = useForm({
 const onSubmit = handleSubmit(async values => {
   await authStore.login(values);
 
-  if (authUser.value) goToQueryFrom();
+  if (authUser.value) goToQueryFrom(query?.from as string);
 });
 </script>
 
@@ -77,7 +78,7 @@ const onSubmit = handleSubmit(async values => {
               type="button"
               variant="link"
               class="text-[13px] font-normal text-primary md:text-sm"
-              @click="goToResetPassword"
+              @click="goToResetPassword(query)"
             >
               Forgot Password ?
             </Button>
@@ -110,7 +111,7 @@ const onSubmit = handleSubmit(async values => {
         type="button"
         variant="link"
         class="px-0 text-primary transition hover:underline hover:opacity-90"
-        @click="goToSignUp"
+        @click="goToSignUp(query)"
       >
         Sign up
       </Button>

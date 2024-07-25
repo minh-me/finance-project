@@ -1,5 +1,9 @@
-export default defineNuxtRouteMiddleware((to, from) => {
-  // const { authUser } = useAuthStore();
-  // console.log({ to, from });
-  // if (!authUser) return navigateTo("/auth/login");
+export default defineNuxtRouteMiddleware(to => {
+  const { authUser } = useAuthStore();
+
+  if (!authUser) {
+    return useGoTo().goToSignIn({
+      from: to.fullPath,
+    });
+  }
 });

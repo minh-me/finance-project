@@ -1,3 +1,8 @@
+<script setup lang="ts">
+const authStore = useAuthStore();
+authStore.refreshAuthFromSession();
+</script>
+
 <template>
   <NuxtLayout>
     <NuxtPage />

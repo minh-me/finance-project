@@ -11,45 +11,32 @@ import { handleError } from "~/utils/helpers/handle-error.helper";
 import { storageHelper } from "~/utils/helpers/storage.helper";
 
 export const useAuthStore = defineStore("auth", () => {
-  const forgotPassSent = reactive({ isSent: false, email: "" });
   const authUser = ref<AuthUser | null>(storageHelper.getAuth());
   const loading = ref<boolean>(false);
 
   const login = async (input: Login) => {
     const data = await _asyncHandler(() => authApi.login(input));
 
-    if (data) _setAuth(data);
-
-    return data;
+    return _updateAuth(data);
   };
 
   const register = async (input: Register) => {
     const data = await _asyncHandler(() => authApi.register(input));
 
-    if (data) _setAuth(data);
-
-    return data;
+    return _updateAuth(data);
   };
 
   const socialLogin = async (input: SocialLogin) => {
     const data = await _asyncHandler(() => authApi.socialLogin(input));
 
-    if (data) _setAuth(data);
-
-    return data;
+    return _updateAuth(data);
   };
 
   const logout = async () => {
-    await _asyncHandler(() => authApi.logout());
+    await authApi.logout().catch(err => handleError(err));
 
     // navigateTo('/auth/login');
-    _clearAuth();
-  };
-
-  const forgotPassword = async (email: string) => {
-    const data = await _asyncHandler(() => authApi.forgotPassword(email));
-
-    if (data) setForgotPassSent(true, data.email);
+    return _updateAuth(null);
   };
 
   const resetPasswordWithToken = async (input: ResetPasswordWithToken) => {
@@ -57,21 +44,13 @@ export const useAuthStore = defineStore("auth", () => {
       authApi.resetPasswordWithToken(input),
     );
 
-    if (data) {
-      _setAuth(data);
-
-      return data;
-    }
+    return _updateAuth(data);
   };
 
   const resetPasswordWithOtp = async (input: ResetPasswordWithOtp) => {
     const data = await _asyncHandler(() => authApi.resetPasswordWithOtp(input));
 
-    if (data) {
-      _setAuth(data);
-
-      return data;
-    }
+    return _updateAuth(data);
   };
 
   const getAccessToken = async () => {
@@ -82,32 +61,34 @@ export const useAuthStore = defineStore("auth", () => {
 
     if (accessToken.expiresAt > currentMS) return accessToken.token;
 
-    if (refreshToken.expiresAt < currentMS) {
-      _clearAuth();
-      return null;
-    }
+    if (refreshToken.expiresAt < currentMS) return _updateAuth(null);
 
-    const data = await refreshAuthByRfToken(refreshToken.token);
+    await getAuthFromRefreshToken(refreshToken.token);
 
-    if (data) return data.accessToken.token;
-
-    _clearAuth();
-    return null;
+    return authUser.value?.accessToken?.token || null;
   };
 
-  const refreshAuthByRfToken = async (rfToken: string) => {
+  const getAuthFromRefreshToken = async (rfToken: string) => {
     try {
       const data = await authApi.refreshToken(rfToken);
 
-      _setAuth(data);
-
-      return data;
+      return _updateAuth(data);
     } catch (error) {
       handleError(error);
-      _clearAuth();
-
-      return null;
+      return _updateAuth(null);
     }
+  };
+
+  const refreshAuthFromSession = async () => {
+    const isRefreshed = sessionStorage.getItem("refreshed");
+
+    if (isRefreshed && authUser.value) return;
+
+    sessionStorage.setItem("refreshed", "true");
+
+    if (!authUser.value?.refreshToken?.token) return;
+
+    await getAuthFromRefreshToken(authUser.value.refreshToken.token);
   };
 
   /**
@@ -115,23 +96,17 @@ export const useAuthStore = defineStore("auth", () => {
    *
    * @param data
    */
-  const _setAuth = (data: AuthUser) => {
-    authUser.value = { ...authUser.value, ...data };
-    storageHelper.setAuth(authUser.value);
-  };
+  const _updateAuth = (data: AuthUser | null) => {
+    if (data) {
+      authUser.value = { ...authUser.value, ...data };
+      storageHelper.setAuth(authUser.value);
 
-  /**
-   * Clear auth
-   */
-  const _clearAuth = () => {
+      return authUser.value;
+    }
+
     storageHelper.clearAuth();
     authUser.value = null;
-  };
-
-  const setForgotPassSent = (isSent: boolean, email?: string) => {
-    forgotPassSent.isSent = isSent;
-
-    if (email) forgotPassSent.email = email;
+    return authUser.value;
   };
 
   /**
@@ -140,7 +115,7 @@ export const useAuthStore = defineStore("auth", () => {
    * @param handler
    * @returns
    */
-  const _asyncHandler = async (handler: () => Promise<any>) => {
+  const _asyncHandler = async (handler: () => Promise<AuthUser | null>) => {
     loading.value = true;
 
     try {
@@ -149,6 +124,7 @@ export const useAuthStore = defineStore("auth", () => {
       return res;
     } catch (error) {
       handleError(error);
+      return null;
     } finally {
       loading.value = false;
     }
@@ -161,11 +137,9 @@ export const useAuthStore = defineStore("auth", () => {
     register,
     logout,
     getAccessToken,
-    setForgotPassSent,
-    forgotPassword,
-    forgotPassSent,
     socialLogin,
     resetPasswordWithOtp,
     resetPasswordWithToken,
+    refreshAuthFromSession,
   };
 });
