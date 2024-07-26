@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
-import { AccountTypeEnum } from "~/utils/enums";
+import { otpApi } from "~/apis/pre-built/10-otp.api";
+import { AccountTypeEnum, OtpTypeEnum, SendOtpToEnum } from "~/utils/enums";
 import {
   calculatePasswordStrength,
-  getAuthValues,
-  RegisterSchema,
-} from "~/validations/auth.validation";
+  verifyAuthKey,
+} from "~/utils/helpers/auth.helper";
+import { handleError } from "~/utils/helpers/handle-error.helper";
+import { RegisterSchema } from "~/validations/auth.validation";
 
 definePageMeta({ layout: "auth", middleware: "only-visitor" });
 
@@ -18,6 +20,57 @@ const { handleSubmit, values, errors } = useForm({
   validationSchema: RegisterSchema,
 });
 
+const otpCodeExpiredCountDown = ref(0);
+const startCountDown = (seconds: number = 60) => {
+  otpCodeExpiredCountDown.value = seconds;
+
+  const interval = setInterval(() => {
+    if (otpCodeExpiredCountDown.value > 0) {
+      otpCodeExpiredCountDown.value--;
+    } else {
+      clearInterval(interval);
+    }
+  }, 1000);
+};
+
+const getOtpItemToSend = (authKey: string) => {
+  const { email, phone } = verifyAuthKey(authKey);
+  return {
+    otpType: OtpTypeEnum.Register,
+    sendOtpTo: phone ? SendOtpToEnum.Phone : SendOtpToEnum.Email,
+    email,
+    phone,
+  };
+};
+
+const isOTPSent = ref(false);
+const isOtpSubmitting = ref(false);
+const onSubmitOTP = async (authKey: string) => {
+  isOtpSubmitting.value = true;
+
+  try {
+    await otpApi.sendOtp(getOtpItemToSend(authKey));
+    startCountDown();
+  } catch (error) {
+    handleError(error);
+  }
+
+  isOtpSubmitting.value = false;
+  isOTPSent.value = true;
+};
+
+const onSubmit = handleSubmit(async formValues => {
+  const { authKey, acceptTerms, ...item } = formValues;
+  await authStore.register({
+    ...getOtpItemToSend(authKey),
+    ...item,
+    ...verifyAuthKey(authKey),
+    accountType: AccountTypeEnum.Local,
+  });
+
+  if (authUser.value) goToQueryFrom(query?.from as string);
+});
+
 const progress = ref(0);
 watch(
   () => values.password,
@@ -27,17 +80,6 @@ watch(
     else progress.value = 0;
   },
 );
-
-const onSubmit = handleSubmit(async formValues => {
-  const { authKey, acceptTerms, passwordConfirm, ...item } = formValues;
-  await authStore.register({
-    ...item,
-    ...getAuthValues(authKey),
-    accountType: AccountTypeEnum.Local,
-  });
-
-  if (authUser.value) goToQueryFrom(query?.from as string);
-});
 </script>
 
 <template>
@@ -138,15 +180,41 @@ const onSubmit = handleSubmit(async formValues => {
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="passwordConfirm">
+      <FormField v-slot="{ componentField }" name="otpCode">
         <FormItem>
           <FormControl>
-            <Input
-              class="py-5 text-[13px] opacity-90 md:text-sm"
-              type="password"
-              placeholder="Repeat Password *"
-              v-bind="componentField"
-            />
+            <div class="relative h-full w-full items-center">
+              <Input
+                class="z-10 rounded-e-full py-5 text-[13px] opacity-90 md:text-sm"
+                type="text"
+                placeholder="OTP Code *"
+                v-bind="componentField"
+                :disabled="!isOTPSent || isOtpSubmitting"
+              />
+
+              <Button
+                class="absolute inset-y-0 end-0 z-20 h-full rounded-full bg-green-500 text-xs opacity-100 transition-opacity duration-300 hover:bg-green-500 hover:opacity-90"
+                :disabled="
+                  errors.authKey ||
+                  !values.authKey ||
+                  otpCodeExpiredCountDown ||
+                  isOtpSubmitting
+                "
+                @click="onSubmitOTP(values.authKey!)"
+              >
+                <Icon
+                  v-if="isOtpSubmitting"
+                  name="lucide:loader"
+                  class="mr-2 h-4 w-4 animate-spin"
+                />
+
+                {{
+                  otpCodeExpiredCountDown
+                    ? `Resend in ${otpCodeExpiredCountDown}`
+                    : "Send OTP"
+                }}
+              </Button>
+            </div>
           </FormControl>
 
           <FormMessage class="text-[13px] opacity-85" />
@@ -185,7 +253,9 @@ const onSubmit = handleSubmit(async formValues => {
         <Button
           type="submit"
           class="user-select-none w-full py-5"
-          :disabled="loading"
+          :disabled="
+            errors.otpCode || !values.otpCode || isOtpSubmitting || loading
+          "
         >
           <Icon
             v-if="loading"

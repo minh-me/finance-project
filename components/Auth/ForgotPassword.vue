@@ -3,8 +3,9 @@ import { useForm } from "vee-validate";
 import { otpApi } from "~/apis/pre-built/10-otp.api";
 import type { VerifyOtp } from "~/types/pre-built/10-otp";
 import { OtpTypeEnum, SendOtpToEnum } from "~/utils/enums";
+import { verifyAuthKey } from "~/utils/helpers/auth.helper";
 import { handleError } from "~/utils/helpers/handle-error.helper";
-import { ForgotSchema, getAuthValues } from "~/validations/auth.validation";
+import { ForgotSchema } from "~/validations/auth.validation";
 interface Props {
   initialValues?: VerifyOtp;
 }
@@ -39,7 +40,7 @@ const startCountDown = (seconds: number = 60) => {
 };
 
 const getOtpItemToSend = (authKey: string) => {
-  const { email, phone } = getAuthValues(authKey);
+  const { email, phone } = verifyAuthKey(authKey);
   return {
     otpType: OtpTypeEnum.ResetPassword,
     sendOtpTo: phone ? SendOtpToEnum.Phone : SendOtpToEnum.Email,
@@ -51,25 +52,23 @@ const getOtpItemToSend = (authKey: string) => {
 const isOTPSent = ref(false);
 const isOtpSubmitting = ref(false);
 const onSubmitOTP = async (authKey: string) => {
+  isOtpSubmitting.value = true;
+
   try {
-    isOtpSubmitting.value = true;
-
     await otpApi.sendOtp(getOtpItemToSend(authKey));
-
     startCountDown();
   } catch (error) {
     handleError(error);
-  } finally {
-    isOtpSubmitting.value = false;
   }
 
+  isOtpSubmitting.value = false;
   isOTPSent.value = true;
 };
 
 const onSubmit = handleSubmit(async values => {
-  try {
-    loading.value = true;
+  loading.value = true;
 
+  try {
     const verifyItem: VerifyOtp = {
       ...getOtpItemToSend(values.authKey),
       otpCode: values.otpCode!,
@@ -82,9 +81,9 @@ const onSubmit = handleSubmit(async values => {
   } catch (error) {
     setFieldError("otpCode", "Invalid OTP Code!");
     handleError(error);
-  } finally {
-    loading.value = false;
   }
+
+  loading.value = false;
 });
 </script>
 

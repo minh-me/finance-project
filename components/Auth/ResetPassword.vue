@@ -2,10 +2,8 @@
 import { useForm } from "vee-validate";
 import type { AuthUser } from "~/types/pre-built/1-auth";
 import type { VerifyOtp } from "~/types/pre-built/10-otp";
-import {
-  calculatePasswordStrength,
-  ResetPasswordSchema,
-} from "~/validations/auth.validation";
+import { calculatePasswordStrength } from "~/utils/helpers/auth.helper";
+import { ResetPasswordSchema } from "~/validations/auth.validation";
 
 interface Props {
   initialValues: VerifyOtp;
