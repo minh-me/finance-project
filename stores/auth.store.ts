@@ -7,6 +7,7 @@ import type {
   ResetPasswordWithToken,
   SocialLogin,
 } from "~/types/pre-built/1-auth";
+import { AccountTypeEnum } from "~/utils/enums";
 import { handleError } from "~/utils/helpers/handle-error.helper";
 import { storageHelper } from "~/utils/helpers/storage.helper";
 
@@ -26,8 +27,13 @@ export const useAuthStore = defineStore("auth", () => {
     return _updateAuth(data);
   };
 
-  const socialLogin = async (input: SocialLogin) => {
-    const data = await _asyncHandler(() => authApi.socialLogin(input));
+  const loginWithGoogle = async (idToken: string) => {
+    const data = await _asyncHandler(() =>
+      authApi.socialLogin({
+        accountType: AccountTypeEnum.Google,
+        idToken,
+      }),
+    );
 
     return _updateAuth(data);
   };
@@ -137,7 +143,7 @@ export const useAuthStore = defineStore("auth", () => {
     register,
     logout,
     getAccessToken,
-    socialLogin,
+    loginWithGoogle,
     resetPasswordWithOtp,
     resetPasswordWithToken,
     refreshAuthFromSession,

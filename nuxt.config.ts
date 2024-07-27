@@ -15,8 +15,8 @@ export default defineNuxtConfig({
     replicateKey: "",
     appUrl: "",
     public: {
-      apiBase: "http://localhost:8888/api",
-      firebaseConfig: "",
+      apiBase: process.env.API_URL,
+      firebaseConfig: process.env.FIREBASE_CONFIG,
     },
   },
 
