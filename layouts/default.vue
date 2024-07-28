@@ -1,11 +1,12 @@
-<script setup lang="ts">
-const authStore = useAuthStore();
-const { authUser } = storeToRefs(authStore);
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>
-    <slot />
+    <Header />
+
+    <main class="px-3 lg:px-14">
+      <slot />
+    </main>
   </div>
 </template>
 
