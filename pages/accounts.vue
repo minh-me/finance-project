@@ -12,11 +12,15 @@ const newAccount = reactive({
       >
         <CardTitle class="line-clamp-1 text-xl">Card Title</CardTitle>
 
-        <Button @click="newAccount.onOpen" size="sm">
+        <Button size="sm" @click="newAccount.onOpen">
           <Icon name="carbon:add" class="mr-2 size-4" />
           Add mew
         </Button>
       </CardHeader>
+
+      <CardContent>
+        <UsersTable />
+      </CardContent>
     </Card>
   </div>
 </template>
