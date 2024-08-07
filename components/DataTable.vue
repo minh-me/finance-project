@@ -20,17 +20,33 @@ import { ref } from "vue";
 import { valueUpdater } from "@/lib/utils";
 import type { Priority, Status, Task } from "~/tasks/data/schema";
 import { priorities, statuses } from "~/tasks/data/data";
+import {
+  getSortQuery,
+  updateSortQuery,
+  verifyQuery,
+} from "~/utils/helpers/format-sorts";
 
 interface DataTableProps {
   columns: ColumnDef<Task, any>[];
   data: Task[];
 }
 const props = defineProps<DataTableProps>();
+const route = useRoute();
 
-const sorting = ref<SortingState>([]);
+const sorting = ref<SortingState>(getSortQuery(route.query._sort?.toString()));
 const columnFilters = ref<ColumnFiltersState>([]);
 const columnVisibility = ref<VisibilityState>({});
 const rowSelection = ref({});
+
+watch(
+  () => route.query,
+  () => {
+    console.log({
+      filterWatch: route.query,
+      verifyQuery: verifyQuery(route.query as Record<string, any>),
+    });
+  },
+);
 
 const table = useVueTable({
   get data() {
@@ -56,6 +72,8 @@ const table = useVueTable({
   enableRowSelection: true,
   onSortingChange: updaterOrValue => {
     valueUpdater(updaterOrValue, sorting);
+
+    updateSortQuery(sorting.value);
   },
   onColumnFiltersChange: updaterOrValue =>
     valueUpdater(updaterOrValue, columnFilters),

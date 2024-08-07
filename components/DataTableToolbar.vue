@@ -30,41 +30,52 @@ const props = defineProps<Props>();
 const emits = defineEmits<Emits>();
 const router = useRouter();
 const route = useRoute();
-const query = route.query;
-console.log({ query });
 
 const filter = reactive<{
   keyword?: string;
   statuses?: Status[];
   priorities?: Priority[];
 }>({
-  keyword: query?.keyword?.toString() || undefined,
-  priorities:
-    props.priorities.filter(priority =>
-      query?.priorities?.toString()?.split(",")?.includes(priority.value),
-    ) || undefined,
-  statuses:
-    props.statuses.filter(status =>
-      query?.statuses?.toString()?.split(",")?.includes(status.value),
-    ) || undefined,
+  keyword: route.query?.keyword ? route.query.keyword.toString() : undefined,
+  statuses: route.query?.statuses
+    ? props.statuses.filter(status =>
+        route.query.statuses?.toString()?.split(",")?.includes(status.value),
+      )
+    : undefined,
+  priorities: route.query?.priorities
+    ? props.priorities.filter(priority =>
+        route.query.priorities
+          ?.toString()
+          ?.split(",")
+          ?.includes(priority.value),
+      )
+    : undefined,
 });
 
 const isFiltered = computed(() => hasData(filter));
-
-const onSearchChange = useDebounceFn((event: Event) => {
-  const target = event.target as HTMLInputElement;
-
-  filter.keyword = target.value || undefined;
+const emitQuery = () => {
+  const statusesFilter = filter.statuses?.map(status => status.value);
+  const prioritiesFilter = filter.priorities?.map(priority => priority.value);
 
   router.push({
     query: {
-      statuses: filter.statuses?.map(status => status.value).join(","),
-      priorities: filter.priorities?.map(priority => priority.value).join(","),
+      ...route.query,
+      statuses: statusesFilter?.length ? statusesFilter.join(",") : undefined,
+      priorities: prioritiesFilter?.length
+        ? prioritiesFilter.join(",")
+        : undefined,
       keyword: filter.keyword,
     },
   });
 
   emits("onFilter", filter);
+};
+
+const onSearchChange = useDebounceFn((event: Event) => {
+  const target = event.target as HTMLInputElement;
+
+  filter.keyword = target.value || undefined;
+  emitQuery();
 }, 1000);
 
 const onSelectStatuses = (optionsSelected?: Option[]) => {
@@ -77,16 +88,7 @@ const onSelectStatuses = (optionsSelected?: Option[]) => {
   });
 
   filter.statuses = statuses?.length ? statuses : undefined;
-
-  router.push({
-    query: {
-      statuses: filter.statuses?.map(status => status.value).join(","),
-      priorities: filter.priorities?.map(priority => priority.value).join(","),
-      keyword: filter.keyword,
-    },
-  });
-
-  emits("onFilter", filter);
+  emitQuery();
 };
 
 const onSelectPriorities = (optionsSelected?: Option[]) => {
@@ -100,15 +102,7 @@ const onSelectPriorities = (optionsSelected?: Option[]) => {
 
   filter.priorities = priorities?.length ? priorities : undefined;
 
-  router.push({
-    query: {
-      statuses: filter.statuses?.map(status => status.value).join(","),
-      priorities: filter.priorities?.map(priority => priority.value).join(","),
-      keyword: filter.keyword,
-    },
-  });
-
-  emits("onFilter", filter);
+  emitQuery();
 };
 
 const onResetFilters = () => {

@@ -77,7 +77,14 @@ export default {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem @click="column.toggleVisibility(false)">
+        <DropdownMenuItem
+          @click="
+            () => {
+              column.clearSorting();
+              column.toggleVisibility(false);
+            }
+          "
+        >
           <Icon
             name="radix-icons:eye-none"
             class="mr-2 h-3.5 w-3.5 text-muted-foreground/70"
