@@ -3,9 +3,8 @@ import { useForm } from "vee-validate";
 import { otpApi } from "~/apis/pre-built/10-otp.api";
 import type { VerifyOtp } from "~/types/pre-built/10-otp";
 import { OtpTypeEnum, SendOtpToEnum } from "~/utils/enums";
-import { verifyAuthKey } from "~/utils/helpers/auth.helper";
-import { handleError } from "~/utils/helpers/handle-error.helper";
-import { ForgotSchema } from "~/validations/auth.validation";
+import { handleError } from "~/utils/helpers/error-handler.helper";
+import { ForgotSchema, parseAuthKey } from "~/validations/auth.validation";
 interface Props {
   initialValues?: VerifyOtp;
 }
@@ -40,7 +39,7 @@ const startCountDown = (seconds: number = 60) => {
 };
 
 const getOtpItemToSend = (authKey: string) => {
-  const { email, phone } = verifyAuthKey(authKey);
+  const { email, phone } = parseAuthKey(authKey);
   return {
     otpType: OtpTypeEnum.ResetPassword,
     sendOtpTo: phone ? SendOtpToEnum.Phone : SendOtpToEnum.Email,

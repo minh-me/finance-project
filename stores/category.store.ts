@@ -1,6 +1,6 @@
 import { categoryApi } from "~/apis/1-category.api";
 import type { Category } from "~/types/1-category";
-import { handleError } from "~/utils/helpers/handle-error.helper";
+import { handleError } from "~/utils/helpers/error-handler.helper";
 
 export const useCategoryStore = defineStore("categories", () => {
   const categories = ref<Category[]>([]);

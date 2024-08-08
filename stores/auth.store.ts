@@ -5,10 +5,9 @@ import type {
   Register,
   ResetPasswordWithOtp,
   ResetPasswordWithToken,
-  SocialLogin,
 } from "~/types/pre-built/1-auth";
 import { AccountTypeEnum } from "~/utils/enums";
-import { handleError } from "~/utils/helpers/handle-error.helper";
+import { handleError } from "~/utils/helpers/error-handler.helper";
 import { storageHelper } from "~/utils/helpers/storage.helper";
 
 export const useAuthStore = defineStore("auth", () => {

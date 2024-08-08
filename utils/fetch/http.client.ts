@@ -1,4 +1,8 @@
-import type { FetchOptions, MethodType, PaginationParams } from "../types";
+import type {
+  FetchOptions,
+  MethodType,
+  PaginationParams,
+} from "../types/fetch.types";
 
 export class HttpClient {
   private readonly isAuth: boolean;

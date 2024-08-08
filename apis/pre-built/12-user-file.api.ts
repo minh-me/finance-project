@@ -2,7 +2,7 @@ import type { PaginateResponse } from "~/types/paginate-reponse.type";
 import type { UserFile } from "~/types/pre-built/12-user-file";
 import type { UpdateResult } from "~/types/update-result";
 import { authFetch } from "~/utils/fetch";
-import type { FetchOptions, PaginationParams } from "~/utils/types";
+import type { FetchOptions, PaginationParams } from "~/utils/types/fetch.types";
 
 const USER_FILE_URL = "/user_files";
 export const userFileApi = {

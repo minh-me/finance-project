@@ -2,7 +2,7 @@ import type { PaginateResponse } from "~/types/paginate-reponse.type";
 import type { PolicyGroup } from "~/types/pre-built/5-policy-group";
 import type { UpdateResult } from "~/types/update-result";
 import { authFetch, guestFetch } from "~/utils/fetch";
-import type { FetchOptions, PaginationParams } from "~/utils/types";
+import type { FetchOptions, PaginationParams } from "~/utils/types/fetch.types";
 
 const POLICY_GROUP_URL = "/policy_groups";
 export const policyGroupApi = {

@@ -2,7 +2,7 @@ import type { PaginateResponse } from "~/types/paginate-reponse.type";
 import type { Setting } from "~/types/pre-built/16-setting";
 import type { UpdateResult } from "~/types/update-result";
 import { authFetch } from "~/utils/fetch";
-import type { FetchOptions, PaginationParams } from "~/utils/types";
+import type { FetchOptions, PaginationParams } from "~/utils/types/fetch.types";
 
 const SETTING_URL = "/settings";
 export const settingApi = {

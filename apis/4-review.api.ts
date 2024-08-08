@@ -1,7 +1,7 @@
 import type { Review } from "~/types/4-review";
 import type { UpdateResult } from "~/types/update-result";
 import { authFetch, guestFetch } from "~/utils/fetch";
-import type { FetchOptions, PaginationParams } from "~/utils/types";
+import type { FetchOptions, PaginationParams } from "~/utils/types/fetch.types";
 
 const REVIEW_URL = "/reviews";
 export const bookingApi = {

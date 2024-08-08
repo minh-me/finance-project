@@ -10,7 +10,7 @@ import type {
   SocialLogin,
 } from "~/types/pre-built/1-auth";
 import { authFetch, guestFetch } from "~/utils/fetch";
-import type { FetchOptions } from "~/utils/types";
+import type { FetchOptions } from "~/utils/types/fetch.types";
 
 const AUTH_URL = "/auth";
 

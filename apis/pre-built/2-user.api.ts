@@ -4,7 +4,7 @@ import type { UpdatePassword, User } from "~/types/pre-built/2-user";
 import type { UpdateResult } from "~/types/update-result";
 import type { AccountStatus } from "~/utils/enums";
 import { authFetch, guestFetch } from "~/utils/fetch";
-import type { FetchOptions, PaginationParams } from "~/utils/types";
+import type { FetchOptions, PaginationParams } from "~/utils/types/fetch.types";
 
 const USER_URL = "/users";
 

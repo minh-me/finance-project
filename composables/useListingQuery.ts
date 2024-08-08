@@ -1,4 +1,4 @@
-import type { PaginationParams } from "~/utils/types";
+import type { PaginationParams } from "~/utils/types/fetch.types";
 
 export const useListingQuery = () => {
   const filter = computed(() => {

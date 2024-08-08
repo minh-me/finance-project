@@ -3,12 +3,7 @@ import type { Table } from "@tanstack/vue-table";
 import { useDebounceFn } from "@vueuse/core";
 import { computed } from "vue";
 import type { Task, Option, Status, Priority } from "~/tasks/data/schema";
-
-const hasData = (obj: { [key: string]: any }) => {
-  return Object.values(obj).some(
-    value => value !== undefined && value !== null && value !== "",
-  );
-};
+import { hasNonEmptyValue } from "~/utils/helpers/data.helper";
 
 interface Props {
   table: Table<Task>;
@@ -52,7 +47,7 @@ const filter = reactive<{
     : undefined,
 });
 
-const isFiltered = computed(() => hasData(filter));
+const isFiltered = computed(() => hasNonEmptyValue(filter));
 const emitQuery = () => {
   const statusesFilter = filter.statuses?.map(status => status.value);
   const prioritiesFilter = filter.priorities?.map(priority => priority.value);
@@ -129,6 +124,7 @@ const onResetFilters = () => {
       <Input
         placeholder="Filter tasks..."
         class="h-8 w-[150px] lg:w-[250px]"
+        :model-value="filter.keyword"
         @input="onSearchChange"
       />
 

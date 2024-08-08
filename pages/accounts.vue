@@ -18,9 +18,7 @@ const newAccount = reactive({
         </Button>
       </CardHeader>
 
-      <CardContent>
-        <UsersTable />
-      </CardContent>
+      <CardContent> </CardContent>
     </Card>
   </div>
 </template>

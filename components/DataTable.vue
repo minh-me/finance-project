@@ -12,7 +12,6 @@ import {
   getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   useVueTable,
 } from "@tanstack/vue-table";
 
@@ -20,11 +19,11 @@ import { ref } from "vue";
 import { valueUpdater } from "@/lib/utils";
 import type { Priority, Status, Task } from "~/tasks/data/schema";
 import { priorities, statuses } from "~/tasks/data/data";
+import { convertQueryToPaginationParams } from "~/utils/helpers/pagination.helper";
 import {
-  getSortQuery,
-  updateSortQuery,
-  verifyQuery,
-} from "~/utils/helpers/format-sorts";
+  applySortingStateToURL,
+  parseSortingQueryFromURL,
+} from "~/utils/helpers/sorting.helper";
 
 interface DataTableProps {
   columns: ColumnDef<Task, any>[];
@@ -33,17 +32,40 @@ interface DataTableProps {
 const props = defineProps<DataTableProps>();
 const route = useRoute();
 
-const sorting = ref<SortingState>(getSortQuery(route.query._sort?.toString()));
+const sorting = ref<SortingState>(parseSortingQueryFromURL(route.query));
 const columnFilters = ref<ColumnFiltersState>([]);
 const columnVisibility = ref<VisibilityState>({});
 const rowSelection = ref({});
 
+const filterWatch = computed(() => {
+  return new URLSearchParams(
+    convertQueryToPaginationParams(useRoute().query),
+  ).toString();
+});
+
 watch(
-  () => route.query,
+  () => filterWatch.value,
   () => {
+    // TODO: refactor
+    // eslint-disable-next-line no-console
     console.log({
-      filterWatch: route.query,
-      verifyQuery: verifyQuery(route.query as Record<string, any>),
+      filterWatch: filterWatch.value,
+      params: convertQueryToPaginationParams({
+        _page: 1,
+        _limit: 2,
+        _populate: ["user", "categoryIds"],
+        _sort: route.query._sort?.toString(),
+        _fields: {
+          id: 1,
+          name: 1,
+          user: {
+            fullName: 1,
+          },
+          categoryIds: 1,
+          token: -1,
+          store: -1,
+        },
+      }),
     });
   },
 );
@@ -73,12 +95,15 @@ const table = useVueTable({
   onSortingChange: updaterOrValue => {
     valueUpdater(updaterOrValue, sorting);
 
-    updateSortQuery(sorting.value);
+    applySortingStateToURL(sorting.value);
   },
+
   onColumnFiltersChange: updaterOrValue =>
     valueUpdater(updaterOrValue, columnFilters),
+
   onColumnVisibilityChange: updaterOrValue =>
     valueUpdater(updaterOrValue, columnVisibility),
+
   onRowSelectionChange: updaterOrValue =>
     valueUpdater(updaterOrValue, rowSelection),
   getCoreRowModel: getCoreRowModel(),
@@ -104,6 +129,7 @@ const onFilter = (filter: {
     .getColumn("priority")
     ?.setFilterValue(filter.priorities?.map(priority => priority.value));
 
+  // eslint-disable-next-line no-console
   console.log({
     keyword: filter.keyword,
     statuses: filter.statuses,

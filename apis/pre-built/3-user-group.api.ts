@@ -2,7 +2,7 @@ import type { PaginateResponse } from "~/types/paginate-reponse.type";
 import type { UserGroup } from "~/types/pre-built/3-user-group";
 import type { UpdateResult } from "~/types/update-result";
 import { authFetch, guestFetch } from "~/utils/fetch";
-import type { FetchOptions, PaginationParams } from "~/utils/types";
+import type { FetchOptions, PaginationParams } from "~/utils/types/fetch.types";
 
 const USER_GROUP_URL = "/user_groups";
 export const userGroupGroupApi = {

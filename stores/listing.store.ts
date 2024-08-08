@@ -1,7 +1,7 @@
 import { listingApi } from "~/apis/2-listing.api";
 import type { Listing } from "~/types/2-listing";
 import type { PageInfo } from "~/types/paginate-reponse.type";
-import { handleError } from "~/utils/helpers/handle-error.helper";
+import { handleError } from "~/utils/helpers/error-handler.helper";
 
 export const useListingStore = defineStore("listings", () => {
   const listings = ref<Listing[]>([]);

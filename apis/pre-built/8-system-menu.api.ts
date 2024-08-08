@@ -1,7 +1,7 @@
 import type { SystemMenu } from "~/types/pre-built/8-system-menu";
 import type { UpdateResult } from "~/types/update-result";
 import { authFetch, guestFetch } from "~/utils/fetch";
-import type { FetchOptions, PaginationParams } from "~/utils/types";
+import type { FetchOptions, PaginationParams } from "~/utils/types/fetch.types";
 
 const SYSTEM_MENU_URL = "/system_menus";
 export const systemMenuApi = {

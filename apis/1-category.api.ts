@@ -1,7 +1,7 @@
 import type { Category } from "~/types/1-category";
 import type { UpdateResult } from "~/types/update-result";
 import { authFetch, guestFetch } from "~/utils/fetch";
-import type { FetchOptions, PaginationParams } from "~/utils/types";
+import type { FetchOptions, PaginationParams } from "~/utils/types/fetch.types";
 
 const CATEGORY_URL = "/categories";
 export const categoryApi = {

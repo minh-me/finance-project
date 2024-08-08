@@ -2,12 +2,12 @@
 import { useForm } from "vee-validate";
 import { otpApi } from "~/apis/pre-built/10-otp.api";
 import { AccountTypeEnum, OtpTypeEnum, SendOtpToEnum } from "~/utils/enums";
+import { handleError } from "~/utils/helpers/error-handler.helper";
 import {
+  RegisterSchema,
   calculatePasswordStrength,
-  verifyAuthKey,
-} from "~/utils/helpers/auth.helper";
-import { handleError } from "~/utils/helpers/handle-error.helper";
-import { RegisterSchema } from "~/validations/auth.validation";
+  parseAuthKey,
+} from "~/validations/auth.validation";
 
 definePageMeta({ layout: "auth", middleware: "only-visitor" });
 
@@ -34,7 +34,7 @@ const startCountDown = (seconds: number = 60) => {
 };
 
 const getOtpItemToSend = (authKey: string) => {
-  const { email, phone } = verifyAuthKey(authKey);
+  const { email, phone } = parseAuthKey(authKey);
   return {
     otpType: OtpTypeEnum.Register,
     sendOtpTo: phone ? SendOtpToEnum.Phone : SendOtpToEnum.Email,
@@ -64,7 +64,7 @@ const onSubmit = handleSubmit(async formValues => {
   await authStore.register({
     ...getOtpItemToSend(authKey),
     ...item,
-    ...verifyAuthKey(authKey),
+    ...parseAuthKey(authKey),
     accountType: AccountTypeEnum.Local,
   });
 

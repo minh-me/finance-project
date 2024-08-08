@@ -1,7 +1,7 @@
 import type { Gift } from "~/types/5-gift";
 import type { UpdateResult } from "~/types/update-result";
 import { authFetch, guestFetch } from "~/utils/fetch";
-import type { FetchOptions, PaginationParams } from "~/utils/types";
+import type { FetchOptions, PaginationParams } from "~/utils/types/fetch.types";
 
 const REVIEW_URL = "/gifts";
 export const giftApi = {

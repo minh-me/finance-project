@@ -1,7 +1,7 @@
 import type { Menu } from "~/types/pre-built/7-menu";
 import type { ImageSize } from "~/utils/enums";
 import { authFetch } from "~/utils/fetch";
-import type { FetchOptions } from "~/utils/types";
+import type { FetchOptions } from "~/utils/types/fetch.types";
 
 const UPLOAD_URL = "/uploads";
 export const uploadApi = {

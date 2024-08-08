@@ -1,6 +1,6 @@
 import type { Otp, OtpResponse, VerifyOtp } from "~/types/pre-built/10-otp";
 import { authFetch, guestFetch } from "~/utils/fetch";
-import type { FetchOptions, PaginationParams } from "~/utils/types";
+import type { FetchOptions, PaginationParams } from "~/utils/types/fetch.types";
 
 const OTP_URL = "/otp";
 export const otpApi = {

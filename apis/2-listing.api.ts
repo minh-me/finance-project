@@ -3,7 +3,7 @@ import type { PaginateResponse } from "~/types/paginate-reponse.type";
 import type { UpdateResult } from "~/types/update-result";
 import type { ActionEnum } from "~/utils/enums";
 import { authFetch, guestFetch } from "~/utils/fetch";
-import type { FetchOptions, PaginationParams } from "~/utils/types";
+import type { FetchOptions, PaginationParams } from "~/utils/types/fetch.types";
 
 const LISTING_URL = "/listings";
 export const listingApi = {
